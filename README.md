@@ -14,3 +14,9 @@ ___Lecturer: Tran Cong Tu___
 | ---------- | --------------- | --------------- |
 | Student ID | 18110102        | 18110175        |
 
+---
+
+### Mindmap - Features
+
+[Mindmap features (Figma)](https://www.figma.com/file/bXawdaj6QwIKnkQeVkC5kD/thầy-Tú?node-id=0%3A1)
+

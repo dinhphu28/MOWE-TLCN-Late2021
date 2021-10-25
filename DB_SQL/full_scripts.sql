@@ -1,0 +1,15 @@
+-- USE master
+-- GO
+
+-- ALTER DATABASE audiosn SET SINGLE_USER WITH ROLLBACK IMMEDIATE
+-- GO
+-- DROP DATABASE audiosn
+-- GO
+
+CREATE DATABASE audiosn
+GO
+
+USE audiosn
+GO
+
+

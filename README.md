@@ -20,6 +20,6 @@
 
 [Mindmap features (Figma)](https://www.figma.com/file/bXawdaj6QwIKnkQeVkC5kD/thầy-Tú?node-id=0%3A1)
 
-### The project's client-side
+## The project's client-side
 
 To make sure it's transparent, I've moved the project's client-side to another repository. Please follow this url: https://github.com/nhhao/mevo-client. It's still in development stage. I'm working hard to finish it soon.

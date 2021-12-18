@@ -1,0 +1,50 @@
+.my-card {
+    /* padding: 1.2rem 2rem; */
+    display: flex;
+    align-items: flex-start;
+    box-shadow: 1px 1px 2px rgba(30, 30, 30, 0.3);
+    border-radius: 12rem;
+    background-color: rgb(195, 235, 229);
+    margin-top: 1.5rem;
+}
+
+.my-card .info {
+    display: flex;
+    /* background-color: red; */
+    align-items: center;
+    align-self: stretch;
+    justify-content: left;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    font-size: 1.25rem;
+    width: 6rem;
+}
+
+.my-card .info span {
+    color: #0d6efd;
+}
+
+.my-card img {
+    width: 8rem;
+    height: 8rem;
+    object-fit: cover;
+    border-radius: 50%;
+    padding: 4px;
+}
+
+.my-card .man-tools {
+    display: flex;
+    /* background-color: blue; */
+    align-items: flex-end;
+    align-self: center;
+    justify-content: right;
+    margin-left: 1.5rem;
+}
+
+.my-card .man-tools button {
+    margin-right: 1.5rem;
+}
+
+#change-password {
+    margin-right: 1rem;
+}

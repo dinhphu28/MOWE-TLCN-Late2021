@@ -1,0 +1,32 @@
+.comment-card {
+    margin-top: 1.5rem;
+    padding: 1rem 2rem 1rem 0;
+    display: flex;
+    box-shadow: 1px 1px 2px rgba(30, 30, 30, 0.2);
+    background: #fff;
+}
+
+.comment-card .comment-info img {
+    width: 8rem;
+    height: 8rem;
+    object-fit: cover;
+}
+
+.comment-card .comment-info span {
+    margin-top: 0.25rem;
+    display: flex;
+    font-size: 0.85rem;
+}
+
+.comment-card p {
+    margin-left: 2rem;
+    margin-top: 1rem;
+}
+
+.comment-card .comment-info .username {
+    color: #29d;
+}
+
+.comment-card .comment-info .datetime {
+    color: #888
+}

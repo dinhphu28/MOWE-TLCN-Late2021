@@ -1,0 +1,15 @@
+.man-section {
+    margin-top: 1%;
+}
+
+.man-section .man-tools-section {
+    text-align: right;
+}
+
+.man-section .man-tools-section button {
+    margin-left: 1rem;
+}
+
+.man-section .list-mod {
+    margin-top: 2%;
+}

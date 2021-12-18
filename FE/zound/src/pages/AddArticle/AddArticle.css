@@ -1,0 +1,23 @@
+.confirm-btn {
+    margin-top: 3%;
+}
+
+.my-glob {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.my-glob textarea {
+    display: block;
+    resize: none;
+    outline: none;
+    white-space: nowrap;
+}
+
+.description-area textarea {
+    min-height: 8rem;
+}
+
+.content-area textarea {
+    min-height: 48rem;
+}

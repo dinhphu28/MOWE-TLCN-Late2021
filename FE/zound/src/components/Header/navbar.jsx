@@ -119,7 +119,7 @@ function NavBar(props) {
                 light
             >
                 <NavbarBrand id="my-brand-logo" href="/">
-                Tech Sharing
+                Zound
                 </NavbarBrand>
                 <NavbarToggler className="me-2" onClick={function noRefCheck(){} } />
                 <Collapse navbar>

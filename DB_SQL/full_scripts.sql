@@ -66,8 +66,8 @@ CREATE TABLE tbl_article (
     col_id INT IDENTITY(1,1),
     col_title NVARCHAR(500) NOT NULL,
     col_description NTEXT NULL,
-    col_content VARCHAR(500) NOT NULL,
-    col_audio_content NTEXT NULL,
+    col_content NTEXT NOT NULL,
+    col_audio_content VARCHAR(500) NULL,
     col_date_created DATE NOT NULL,
     col_time_created TIME NOT NULL,
     col_author VARCHAR(30) REFERENCES tbl_user(col_username) NOT NULL,
@@ -113,6 +113,19 @@ CREATE TABLE tbl_article_interaction (
     col_vote_score FLOAT NOT NULL,
 
     PRIMARY KEY(col_article_id)
+)
+GO
+
+-- Article's report
+CREATE TABLE tbl_article_report (
+    col_id INT IDENTITY(1,1),
+    col_article_id INT REFERENCES tbl_article(col_id) NOT NULL,
+    col_author VARCHAR(30) REFERENCES tbl_user(col_username) NOT NULL,
+    col_date DATE NOT NULL,
+    col_time TIME NOT NULL,
+    col_content NTEXT NOT NULL,
+
+    PRIMARY KEY(col_id)
 )
 GO
 

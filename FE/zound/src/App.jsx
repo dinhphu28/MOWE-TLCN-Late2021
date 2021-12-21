@@ -15,6 +15,7 @@ import { useState } from 'react';
 import Profile from './pages/Profile/index';
 import ChangePassword from './pages/ChangePassword/index';
 import AdminMan from './pages/AdminManagement/AdminMan';
+import ReportMan from './pages/ReportManagement';
 
 function App() {
 
@@ -57,6 +58,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
 
             <Route path="/admin" element={<AdminMan />} />
+
+            <Route path="/reports" element={<ReportMan />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

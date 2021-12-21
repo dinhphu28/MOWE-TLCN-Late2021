@@ -95,12 +95,15 @@ function SignUpPage(props) {
 
     return (
         <div className="container" style={{paddingTop: "5%"}}>
+            <h1 style={{textAlign: "center"}}>
+                Sign up
+            </h1>
             <form
                 onSubmit={e => {
                     submitForm(e);
                 }}
                 >
-                <div className="form-group">
+                <div className="form-group form-label">
                     <label htmlFor="text">Username:</label>
                     <input
                         type="text"
@@ -110,7 +113,7 @@ function SignUpPage(props) {
                         onChange={e => changeUsernameInputValue(e)}
                     />
                 </div>
-                <div className="form-group">
+                <div className="form-group form-label">
                     <label htmlFor="pwd">Password:</label>
                     <input
                         type="password"
@@ -120,7 +123,7 @@ function SignUpPage(props) {
                         onChange={e => changePasswordInputValue(e)}
                     />
                 </div>
-                <div className="form-group">
+                <div className="form-group form-label">
                     <label htmlFor="pwd">Retype password:</label>
                     <input
                         type="password"

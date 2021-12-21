@@ -89,6 +89,7 @@ function AddArticle(props) {
                 title: title,
                 description: description,
                 content: content,
+                audioContent: "nothing",
                 thumbnailUrl: thumbnailUrl,
                 category: category
             };

@@ -94,3 +94,7 @@
     display: flex;
     justify-content: space-between;
 }
+
+.article button svg {
+    margin-right: 0.5rem;
+}

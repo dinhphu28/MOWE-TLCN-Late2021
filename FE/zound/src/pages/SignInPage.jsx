@@ -96,12 +96,15 @@ function SignInPage(props) {
 
     return (
         <div className="container" style={{paddingTop: "5%"}}>
+            <h1 style={{textAlign: "center"}}>
+                Sign in
+            </h1>
             <form
                 onSubmit={e => {
                     submitForm(e);
                 }}
                 >
-                <div className="form-group">
+                <div className="form-group form-label">
                     <label htmlFor="text">Username:</label>
                     <input
                         type="text"
@@ -111,7 +114,7 @@ function SignInPage(props) {
                         onChange={e => changeUsernameInputValue(e)}
                     />
                 </div>
-                <div className="form-group">
+                <div className="form-group form-label">
                     <label htmlFor="pwd">Password:</label>
                     <input
                         type="password"

@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { faCaretUp, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCaretUp, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -13,6 +13,7 @@ import { Button } from "reactstrap";
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import articleApi from '../../api/articleApi';
 import { useNavigate } from "react-router";
+import ReportPopup from "./ReportPopup";
 
 function ArticleContent(props) {
     // constructor(props) {
@@ -29,6 +30,7 @@ function ArticleContent(props) {
     const [voteState, setVoteState] = useState(0);
     const [tmpVoteScore, setTmpVoteScore] = useState(article.voteScore);
     const [editPopupOpen, setEditPopupOpen] = useState(false);
+    const [reportPopupOpen, setReportPopupOpen] = useState(false);
     // const [refresh, setRefresh] = useState(false);
 
     let navigate = useNavigate();
@@ -82,7 +84,8 @@ function ArticleContent(props) {
     };
 
     const fetchDeleteArticle = async (articleId) => {
-        if((localStorage.getItem("role") === "mod" && article.author === localStorage.getItem("username")) ||
+        if((localStorage.getItem("role") === "norm" && article.author === localStorage.getItem("username")) ||
+            (localStorage.getItem("role") === "mod") ||
             localStorage.getItem("role") === "admin") {
             
             try {
@@ -102,33 +105,62 @@ function ArticleContent(props) {
         setEditPopupOpen(false);
     }
 
+    const receiveRPCancel = () => {
+        setReportPopupOpen(false);
+    }
+
     return (
         <div className="article">
             <div className="hd-and-btn">
                 <h1 id="article-title">{article.title}</h1>
                 <div id="btn-man">
-                    {((localStorage.getItem("role") === "mod" && article.author === localStorage.getItem("username")) ||
+                    {((localStorage.getItem("role") === "norm" && article.author === localStorage.getItem("username")) ||
+                            (localStorage.getItem("role") === "mod" && article.author === localStorage.getItem("username")) ||
+                            localStorage.getItem("role") === "admin") ?
+                        <>
+                            <Button id="btn-edit"
+                                type="button"
+                                color="primary"
+                                onClick={() => {
+                                    setEditPopupOpen(true);
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faPen} /> Edit
+                            </Button>
+                            {/* <Button id="btn-del"
+                                type="button"
+                                color="danger"
+                                onClick={() => {
+                                    fetchDeleteArticle(article.id);
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faTrash} /> Delete
+                            </Button> */}
+                        </> : ""}
+
+                    {((localStorage.getItem("role") === "norm" && article.author === localStorage.getItem("username")) ||
+                        (localStorage.getItem("role") === "mod") ||
                         localStorage.getItem("role") === "admin") ?
-                    <>
-                        <Button id="btn-edit"
-                            type="button"
-                            color="primary"
-                            onClick={() => {
-                                setEditPopupOpen(true);
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faPen} /> Edit
-                        </Button>
-                        <Button id="btn-del"
-                            type="button"
-                            color="danger"
-                            onClick={() => {
-                                fetchDeleteArticle(article.id);
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faTrash} /> Delete
-                        </Button>
-                    </> : ""}
+                        <>
+                            {/* <Button id="btn-edit"
+                                type="button"
+                                color="primary"
+                                onClick={() => {
+                                    setEditPopupOpen(true);
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faPen} /> Edit
+                            </Button> */}
+                            <Button id="btn-del"
+                                type="button"
+                                color="danger"
+                                onClick={() => {
+                                    fetchDeleteArticle(article.id);
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faTrash} /> Delete
+                            </Button>
+                        </> : ""}
                 </div>
             </div>
             <div className="article-info">
@@ -181,11 +213,21 @@ function ArticleContent(props) {
                 <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />
             </div>
             <hr />
+            {(localStorage.getItem("username") !== null) ? <Button
+                color="info"
+                onClick={() => {
+                    setReportPopupOpen(true);
+                }}
+            >
+                <FontAwesomeIcon icon={faFile} /> Report
+            </Button> : ""}
             <div className="comment">
                 <Comments articleId={article.id}/>
             </div>
 
             {editPopupOpen ? <EditArticlePopup article={article} onHandleChange={receiveCancel} /> : ""}
+
+            {reportPopupOpen ? <ReportPopup articleId={article.id} onHandleChange={receiveRPCancel} /> : ""}
         </div>
     )
 }

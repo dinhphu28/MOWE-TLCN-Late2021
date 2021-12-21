@@ -98,13 +98,14 @@ function EditArticlePopup(props) {
                 title: title,
                 description: description,
                 content: content,
+                audioContent: "",
                 thumbnailUrl: thumbnailUrl,
                 category: category
             };
 
             const response = await articleApi.put(article.id, data);
 
-            console.log("Post article successfully: ", response);
+            console.log("Update article successfully: ", response);
 
         } catch(error) {
             console.log("Failed to post article to BE: ", error);

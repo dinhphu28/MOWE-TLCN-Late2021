@@ -6,6 +6,7 @@ import "./navbarStyles.css"
 import { useNavigate } from 'react-router-dom';
 import profileApi from '../../api/profileApi';
 import AdminManBtn from './adminManBtn';
+import ReportManBtn from './reportManBtn';
 
 // NavBar.propTypes = {};
 
@@ -140,7 +141,8 @@ function NavBar(props) {
                 </Nav>
 
                 {/* <AddArticleBtn /> */}
-                {(localStorage.getItem("role") === "mod" || localStorage.getItem("role") === "admin") ? <AddArticleBtn /> : ""}
+                {(localStorage.getItem("role") === "norm" || localStorage.getItem("role") === "mod" || localStorage.getItem("role") === "admin") ? <AddArticleBtn /> : ""}
+                {(localStorage.getItem("role") === "mod" || localStorage.getItem("role") === "admin") ? <ReportManBtn /> : ""}
                 {(localStorage.getItem("role") === "admin") ? <AdminManBtn /> : ""}
                 
                 {(localStorage.getItem("username") !== null) ? <UserAvtNav onHandleChange={receiveData} /> : <SignInUpNav />}

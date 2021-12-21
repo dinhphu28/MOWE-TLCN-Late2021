@@ -2,8 +2,6 @@ package com.ndp.audiosn.Entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -20,7 +18,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ArticleInteraction {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "col_article_id")
     private Integer id;
 

@@ -14,6 +14,7 @@ import com.ndp.audiosn.Models.Comment.CommentCreateModel;
 import com.ndp.audiosn.Models.Comment.CommentUpdateModel;
 import com.ndp.audiosn.Models.UserVoteState.UVSReturnModel;
 import com.ndp.audiosn.Models.UserVoteState.UVSUpdateModel;
+import com.ndp.audiosn.Services.ArticleReportService;
 import com.ndp.audiosn.Services.ArticleService;
 import com.ndp.audiosn.Services.CommentService;
 import com.ndp.audiosn.Services.UserVoteStateService;
@@ -39,8 +40,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/v1/articles")
@@ -62,6 +61,9 @@ public class ArticleREST {
 
     @Autowired
     private UserVoteStateService userVoteStateService;
+
+    @Autowired
+    private ArticleReportService articleReportService;
 
     @GetMapping (
         produces = MediaType.APPLICATION_JSON_VALUE
@@ -200,6 +202,7 @@ public class ArticleREST {
             if (/* article.getAuthor() == null || */
                 article.getCategory() == null ||
                 article.getContent() == null ||
+                article.getAudioContent() == null ||
                 // article.getDateCreated() == null ||
                 article.getDescription() == null ||
                 article.getThumbnailUrl() == null ||
@@ -247,6 +250,8 @@ public class ArticleREST {
         kk = commentService.deleteAllByArticleId(id);
 
         kk = userVoteStateService.deleteAllByArticleId(id);
+
+        kk = articleReportService.deleteAllByArticleId(id);
         
         kk = articleService.deleteOne(id);
 

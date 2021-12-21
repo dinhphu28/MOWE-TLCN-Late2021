@@ -38,7 +38,7 @@ public class ArticleUpdateModel {
     public Article toArticle(Integer id, LocalDate dateCreated, LocalTime timeCreated, String author, String url) {
         // Article article = new Article(id, title, description, content, dateCreated, timeCreated, author, url, category, thumbnailUrl);
 
-        Article article = new Article(0, title, description, content, audioContent, dateCreated, timeCreated, author, url, category, thumbnailUrl);
+        Article article = new Article(id, title, description, content, audioContent, dateCreated, timeCreated, author, url, category, thumbnailUrl);
 
         return article;
     }

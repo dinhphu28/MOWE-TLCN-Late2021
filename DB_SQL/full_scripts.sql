@@ -12,6 +12,16 @@ GO
 USE audiosn
 GO
 
+-- Files
+CREATE TABLE tbl_file (
+    col_uuid VARCHAR(40),
+    col_filename_extension VARCHAR(20),
+    col_filename VARCHAR(61),
+
+    PRIMARY KEY(col_uuid)
+)
+GO
+
 -- User
 CREATE TABLE tbl_user (
     col_username VARCHAR(30),

@@ -15,9 +15,9 @@ function Profile(props) {
     
     // const [profileInfo, setProfileInfo] = useState({});
 
-    const changeAvatarInputValue = (e) => {
-        setAvatar(e.target.value);
-    }
+    // const changeAvatarInputValue = (e) => {
+    //     setAvatar(e.target.value);
+    // }
     const changeEmailInputValue = (e) => {
         setEmail(e.target.value);
     }

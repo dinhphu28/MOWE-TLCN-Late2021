@@ -67,6 +67,13 @@ function AddArticle(props) {
             }
         }
 
+        if(audioFileName.length < 10) {
+            returnData = {
+                error: true,
+                msg: "Wrong url length"
+            }
+        }
+
         return returnData;
     };
 

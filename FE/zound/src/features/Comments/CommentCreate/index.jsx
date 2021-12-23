@@ -6,6 +6,7 @@ import "./CommentCreate.css";
 // import PropTypes from 'prop-types';
 import commentApi from '../../../api/commentApi';
 import profileApi from '../../../api/profileApi';
+import { BASE_URL_API_BE } from '../../../constants/global';
 
 // CommentCreate.propTypes = {};
 
@@ -62,7 +63,7 @@ function CommentCreate(props) {
 
     return (
         <div className="leave-comment">
-            <img src={(avatar) ? (process.env.REACT_APP_BE_API_V1_URL + "/files/downloadFile/" + avatar) : "http://www.vov.edu.vn/frontend/home/images/no-avatar.png"} alt="Avatar" />
+            <img src={(avatar) ? (BASE_URL_API_BE + "/files/downloadFile/" + avatar) : "http://www.vov.edu.vn/frontend/home/images/no-avatar.png"} alt="Avatar" />
             <textarea
                 name="comment"
                 rows="4"

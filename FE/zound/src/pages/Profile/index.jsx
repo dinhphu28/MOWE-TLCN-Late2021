@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import profileApi from '../../api/profileApi';
+import { BASE_URL_API_BE } from '../../constants/global';
+import UploadFiles from '../../features/FileUploadCard';
 // import PropTypes from 'prop-types';
 import "./Profile.css";
 
@@ -102,10 +104,15 @@ function Profile(props) {
         }
     }
 
+    const receiveImageUrl = (imgFileName) => {
+        setAvatar(imgFileName);
+    }
+
     return (
         <div className="my-profile">
             <div className="username-section">
-                <img src={avatar} alt="Avatar" />
+                {/* <img src={avatar} alt="Avatar" /> */}
+                <img src={avatar ? (BASE_URL_API_BE + "/files/downloadFile/" + avatar) : "http://www.vov.edu.vn/frontend/home/images/no-avatar.png"} alt="Avatar" />
                 <h5>
                     Username: <span style={{color: "#20cc93"}}>{localStorage.getItem("username")}</span>
                 </h5>
@@ -116,7 +123,7 @@ function Profile(props) {
                 }}
             >
                 <FormGroup>
-                    <Label>
+                    {/* <Label>
                         Avatar URL:
                     </Label>
                     <Input
@@ -125,7 +132,11 @@ function Profile(props) {
                         placeholder="Your avatar image's url"
                         onChange={e => changeAvatarInputValue(e)}
                         value={avatar}
-                    />
+                    /> */}
+                    <Label>
+                        Upload avatar:
+                    </Label>
+                    <UploadFiles onHandleChange={receiveImageUrl} />
                 </FormGroup>
                 <FormGroup>
                     <Label>

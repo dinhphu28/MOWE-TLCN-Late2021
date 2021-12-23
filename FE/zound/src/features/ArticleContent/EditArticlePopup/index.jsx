@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Input, Label } from 'reactstrap';
 import articleApi from '../../../api/articleApi';
-import { ARTICLE_CATEGORIES } from '../../../constants/global';
+import { ARTICLE_CATEGORIES, BASE_URL_API_BE } from '../../../constants/global';
+import UploadFiles from '../../FileUploadCard';
 import "./EditArticlePopup.css";
 // import PropTypes from 'prop-types';
 
@@ -15,11 +16,20 @@ function EditArticlePopup(props) {
     const [description, setDescription] = useState("");
     const [content, setContent] = useState("");
     const [thumbnailUrl, setThumbnailUrl] = useState("");
+    const [audioFileName, setAudioFileName] = useState("");
     const [category, setCategory] = useState(ARTICLE_CATEGORIES.front_end.queryValue);
     const [newArticle, setNewArticle] = useState({});
 
     useEffect(() => {
         setNewArticle(article);
+
+        setTitle(article.title);
+        setDescription(article.description);
+        setContent(article.content);
+        setThumbnailUrl(article.thumbnailUrl);
+        setAudioFileName(article.audioContent);
+        // setCategory(article.category);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const changeInputValueTitle = (e) => {
@@ -31,9 +41,9 @@ function EditArticlePopup(props) {
     const changeInputValueContent = (e) => {
         setContent(e.target.value);
     };
-    const changeInputValueThumbnailUrl = (e) => {
-        setThumbnailUrl(e.target.value);
-    };
+    // const changeInputValueThumbnailUrl = (e) => {
+    //     setThumbnailUrl(e.target.value);
+    // };
     const changeInputValueCategory = (e) => {
         setCategory(getQueryValueFromLabel(e.target.value));
     };
@@ -92,23 +102,25 @@ function EditArticlePopup(props) {
     }
 
     const updateArticleToBE = async () => {
-        try {
-            const data = {
-                userAgent: localStorage.getItem("username"),
-                title: title,
-                description: description,
-                content: content,
-                audioContent: "",
-                thumbnailUrl: thumbnailUrl,
-                category: category
-            };
-
-            const response = await articleApi.put(article.id, data);
-
-            console.log("Update article successfully: ", response);
-
-        } catch(error) {
-            console.log("Failed to post article to BE: ", error);
+        if(audioFileName !== "") {
+            try {
+                const data = {
+                    userAgent: localStorage.getItem("username"),
+                    title: title,
+                    description: description,
+                    content: content,
+                    audioContent: audioFileName,
+                    thumbnailUrl: thumbnailUrl,
+                    category: category
+                };
+    
+                const response = await articleApi.put(article.id, data);
+    
+                console.log("Update article successfully: ", response);
+    
+            } catch(error) {
+                console.log("Failed to post article to BE: ", error);
+            }
         }
     }
 
@@ -158,6 +170,14 @@ function EditArticlePopup(props) {
         }
     };
 
+    const receiveAudioUrl = (auFileName) => {
+        setAudioFileName(auFileName);
+    }
+
+    const receiveImageUrl = (imgFileName) => {
+        setThumbnailUrl(imgFileName);
+    }
+
     return (
         <div>
             <div className="layer"></div>
@@ -203,7 +223,7 @@ function EditArticlePopup(props) {
                         />
                     </div>
                     <div className="thumbnail-area2 my-glob2">
-                        <Label>
+                        {/* <Label>
                             Thumbnail URL:
                         </Label>
                         <Input
@@ -211,7 +231,24 @@ function EditArticlePopup(props) {
                             name="thumbnail"
                             onChange={e => changeInputValueThumbnailUrl(e)}
                             defaultValue={newArticle.thumbnailUrl}
-                        />
+                        /> */}
+                        <Label>
+                            Upload thumbnail image:
+                        </Label>
+                        <UploadFiles onHandleChange={receiveImageUrl} />
+                        <hr />
+                    </div>
+                    <div className="audio-upload-area my-glob">
+                        <Label>
+                            Old audio file: <a href={BASE_URL_API_BE + "/files/downloadFile/" + article.audioContent}>Download old audio</a>
+                        </Label>
+                        <hr />
+
+                        <Label>
+                            Upload audio file:
+                        </Label>
+                        <UploadFiles onHandleChange={receiveAudioUrl} />
+                        <hr />
                     </div>
                     <div className="category-area2 my-glob2">
                         <Label>

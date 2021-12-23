@@ -6,3 +6,5 @@ export const ARTICLE_CATEGORIES = {
     android: {value: "android", label: "Android", queryValue: "android"},
     tips_tricks:{value: "tips-tricks", label: "Tips & Tricks", queryValue: "tips-tricks"},
 };
+
+export const BASE_URL_API_BE = process.env.REACT_APP_BE_API_V1_URL;

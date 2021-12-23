@@ -38,7 +38,7 @@ function UserModCard(props) {
 
     return (
         <div className="my-card">
-            <img src={(userInfo.avatar) ? userInfo.avatar : "http://www.vov.edu.vn/frontend/home/images/no-avatar.png"} alt="Avatar" />
+            <img src={(userInfo.avatar) ? (process.env.REACT_APP_BE_API_V1_URL + "/files/downloadFile/" + userInfo.avatar) : "http://www.vov.edu.vn/frontend/home/images/no-avatar.png"} alt="Avatar" />
             <div className="info" >
                 <span className="username">{userInfo.username}</span>
             </div>

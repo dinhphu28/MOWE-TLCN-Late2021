@@ -43,7 +43,7 @@ function CommentCard(props) {
     return (
         <div className="comment-card">
             <div className="comment-info">
-                <img src={loaded ? avatar : "http://www.vov.edu.vn/frontend/home/images/no-avatar.png"} alt="Avatar" />
+                <img src={loaded ? (process.env.REACT_APP_BE_API_V1_URL + "/files/downloadFile/" + avatar) : "http://www.vov.edu.vn/frontend/home/images/no-avatar.png"} alt="Avatar" />
                 {/* https://bloganchoi.com/wp-content/uploads/2021/10/iu-solo.jpg */}
                 <span className="username">{comment.author}</span>
                 <span className="datetime">{comment.date} {comment.time}</span>

@@ -14,6 +14,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import articleApi from '../../api/articleApi';
 import { useNavigate } from "react-router";
 import ReportPopup from "./ReportPopup";
+import ReactAudioPlayer from "react-audio-player";
 
 function ArticleContent(props) {
     // constructor(props) {
@@ -210,6 +211,15 @@ function ArticleContent(props) {
             </div>
             <hr />
             <div className="article-content">
+                {/* Audio player here */}
+                <ReactAudioPlayer
+                    // src="http://localhost:8080/api/v1/files/downloadFile/cac2a911-6a39-4237-bb8d-49c27eb3dbc2.mp3"
+                    // src="http://localhost:8080/downloadFile/06c05f65-4a0d-4e35-95ff-8ea07b326a37.m4a"
+                    src={process.env.REACT_APP_BE_API_V1_URL + "/files/downloadFile/" + article.audioContent}
+                    autoPlay
+                    controls
+                />
+
                 <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />
             </div>
             <hr />

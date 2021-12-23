@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Input, Label } from 'reactstrap';
 import articleApi from '../../api/articleApi';
 import { ARTICLE_CATEGORIES } from '../../constants/global';
+import UploadFiles from '../../features/FileUploadCard';
 import "./AddArticle.css";
 // import PropTypes from 'prop-types';
 
@@ -13,6 +14,7 @@ function AddArticle(props) {
     const [description, setDescription] = useState("");
     const [content, setContent] = useState("");
     const [thumbnailUrl, setThumbnailUrl] = useState("");
+    const [audioFileName, setAudioFileName] = useState("");
     const [category, setCategory] = useState(ARTICLE_CATEGORIES.front_end.queryValue);
 
     const changeInputValueTitle = (e) => {
@@ -24,9 +26,9 @@ function AddArticle(props) {
     const changeInputValueContent = (e) => {
         setContent(e.target.value);
     };
-    const changeInputValueThumbnailUrl = (e) => {
-        setThumbnailUrl(e.target.value);
-    };
+    // const changeInputValueThumbnailUrl = (e) => {
+    //     setThumbnailUrl(e.target.value);
+    // };
     const changeInputValueCategory = (e) => {
         setCategory(getQueryValueFromLabel(e.target.value));
     };
@@ -83,23 +85,25 @@ function AddArticle(props) {
     }
 
     const createArticleToBE = async () => {
-        try {
-            const data = {
-                author: localStorage.getItem("username"),
-                title: title,
-                description: description,
-                content: content,
-                audioContent: "nothing",
-                thumbnailUrl: thumbnailUrl,
-                category: category
-            };
-
-            const response = await articleApi.post(data);
-
-            console.log("Post article successfully: ", response);
-
-        } catch(error) {
-            console.log("Failed to post article to BE: ", error);
+        if(audioFileName !== "") {
+            try {
+                const data = {
+                    author: localStorage.getItem("username"),
+                    title: title,
+                    description: description,
+                    content: content,
+                    audioContent: audioFileName,
+                    thumbnailUrl: thumbnailUrl,
+                    category: category
+                };
+    
+                const response = await articleApi.post(data);
+    
+                console.log("Post article successfully: ", response);
+    
+            } catch(error) {
+                console.log("Failed to post article to BE: ", error);
+            }
         }
     }
 
@@ -125,6 +129,14 @@ function AddArticle(props) {
             return ARTICLE_CATEGORIES.tips_tricks.queryValue
         }
     };
+
+    const receiveAudioUrl = (auFileName) => {
+        setAudioFileName(auFileName);
+    }
+
+    const receiveImageUrl = (imgFileName) => {
+        setThumbnailUrl(imgFileName);
+    }
 
     return (
         <div>
@@ -166,14 +178,26 @@ function AddArticle(props) {
                     />
                 </div>
                 <div className="thumbnail-area my-glob">
-                    <Label>
+                    {/* <Label>
                         Thumbnail URL:
                     </Label>
                     <Input
                         type="url"
                         name="thumbnail"
                         onChange={e => changeInputValueThumbnailUrl(e)}
-                    />
+                    /> */}
+                    <Label>
+                        Upload thumbnail image:
+                    </Label>
+                    <UploadFiles onHandleChange={receiveImageUrl} />
+                    <hr />
+                </div>
+                <div className="audio-upload-area my-glob">
+                    <Label>
+                        Upload audio file:
+                    </Label>
+                    <UploadFiles onHandleChange={receiveAudioUrl} />
+                    <hr />
                 </div>
                 <div className="category-area my-glob">
                     <Label>

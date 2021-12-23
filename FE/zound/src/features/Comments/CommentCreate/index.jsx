@@ -62,7 +62,7 @@ function CommentCreate(props) {
 
     return (
         <div className="leave-comment">
-            <img src={(avatar) ? avatar : "http://www.vov.edu.vn/frontend/home/images/no-avatar.png"} alt="Avatar" />
+            <img src={(avatar) ? (process.env.REACT_APP_BE_API_V1_URL + "/files/downloadFile/" + avatar) : "http://www.vov.edu.vn/frontend/home/images/no-avatar.png"} alt="Avatar" />
             <textarea
                 name="comment"
                 rows="4"

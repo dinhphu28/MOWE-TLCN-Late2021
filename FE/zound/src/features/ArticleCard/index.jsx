@@ -4,6 +4,7 @@ import React from "react";
 import { Component } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { BASE_URL_API_BE } from "../../constants/global";
 // import "./articleCard.css"
 
 class ArticleCard extends Component {
@@ -44,7 +45,7 @@ class ArticleCard extends Component {
 
         return (
             <Card>
-                <img src={article.thumbnailUrl} alt="" />
+                <img src={BASE_URL_API_BE + "/files/downloadFile/" + article.thumbnailUrl} alt="thumbnail pic" />
                 <Content>
                     <h2>
                         <Link to={"/articles/" + article.url}>{article.title}</Link>

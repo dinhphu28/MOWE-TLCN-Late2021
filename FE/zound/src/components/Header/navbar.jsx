@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import profileApi from '../../api/profileApi';
 import AdminManBtn from './adminManBtn';
 import ReportManBtn from './reportManBtn';
+import { BASE_URL_API_BE } from '../../constants/global';
 
 // NavBar.propTypes = {};
 
@@ -71,7 +72,7 @@ function UserAvtNav(props) {
                     // caret
                     nav
                 >
-                    <img src={avatar} alt="Avatar" />
+                    <img src={BASE_URL_API_BE + "/files/downloadFile/" + avatar} alt="Avatar" />
                 </DropdownToggle>
                 <DropdownMenu end>
                     <DropdownItem>

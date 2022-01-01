@@ -28,4 +28,6 @@ public class ArticleReportItemModel {
     private String articleTitle;
 
     private String articleUrl;
+
+    private Boolean solved;
 }

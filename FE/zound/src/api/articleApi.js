@@ -35,6 +35,12 @@ const articleApi = {
                 'Authorization': 'Bearer ' + localStorage.getItem("token")
             }
         })
+    },
+
+    hideShow: (articleId, data) => {
+        const url = `/articles/${articleId}/hide`;
+
+        return axiosClient.put(url, data);
     }
 };
 

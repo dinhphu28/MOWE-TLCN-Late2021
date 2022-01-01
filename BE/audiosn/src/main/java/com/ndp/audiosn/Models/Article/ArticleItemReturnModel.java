@@ -39,6 +39,8 @@ public class ArticleItemReturnModel {
 
     private Integer voteScore;
 
+    private Boolean hidden;
+
     public ArticleItemReturnModel(Article article, Integer voteScore) {
         this.id = article.getId();
 
@@ -63,5 +65,7 @@ public class ArticleItemReturnModel {
         this.thumbnailUrl = article.getThumbnailUrl();
 
         this.voteScore = voteScore;
+
+        this.hidden = article.getHidden();
     }
 }

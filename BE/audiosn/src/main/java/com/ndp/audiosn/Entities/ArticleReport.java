@@ -41,4 +41,7 @@ public class ArticleReport {
 
     @Column(name = "col_content")
     private String content;
+
+    @Column(name = "col_solved")
+    private Boolean solved;
 }

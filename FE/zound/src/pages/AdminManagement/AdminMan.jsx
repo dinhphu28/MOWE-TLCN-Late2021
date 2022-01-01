@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Row } from 'reactstrap';
+import { Button, ButtonGroup, Col, Row } from 'reactstrap';
 import UserModCard from '../../features/UserCard/UserModCard';
 import "./AdminMan.css";
 // import PropTypes from 'prop-types';
@@ -19,12 +19,14 @@ function AdminMan(props) {
     const [addModPopupOpen, setAddModPopupOpen] = useState(false);
     const [currentPopupUser, setCurrentPopupUser] = useState("");
     const [refresh, setRefresh] = useState(false);
+    const [active, setActive] = useState(true);
 
     useEffect(() => {
         const fetchListMods = async () => {
             try {
                 const params = {
-                    role: "mod"
+                    role: "mod",
+                    active: active
                 };
 
                 const response = await usersRoleApi.getAll(params);
@@ -41,7 +43,7 @@ function AdminMan(props) {
         }
 
         fetchListMods();
-    }, [popupOpen, addModPopupOpen, refresh]);
+    }, [popupOpen, addModPopupOpen, refresh, active]);
 
     const receivePopupState = (username) => {
         setCurrentPopupUser(username);
@@ -135,32 +137,57 @@ function AdminMan(props) {
     };
 
     return (
-        <div className="container man-section">
-            <div className="man-tools-section">
-                <Button
-                    type="button"
-                    color="primary"
-                    onClick={() => {
-                        setAddModPopupOpen(true);
-                    }}
-                >
-                    <FontAwesomeIcon icon={faUserPlus} /> Add mod user
-                </Button>
-                <Button
-                    type="button"
-                    color="success"
-                    onClick={() => {
-                        setRefresh(!refresh);
-                    }}
-                >
-                    <FontAwesomeIcon icon={faSyncAlt} />
-                </Button>
+        <div>
+            <div className="sw-state-separate">
+                {(localStorage.getItem("role") === "admin") ?
+                    <ButtonGroup className="float-end">
+                        <Button
+                            color={active ? "primary" : "secondary"}
+                            onClick={() => {
+                                setActive(true);
+                            }}
+                        >
+                            Active
+                        </Button>
+                        <Button
+                            color={active ? "secondary" : "primary"}
+                            onClick={() => {
+                                setActive(false);
+                            }}
+                        >
+                            Blocked
+                        </Button>
+                    </ButtonGroup>
+                : ""}
             </div>
-            <div className="list-mod">
-                {renListMods()}
+            <br />
+            <div className="container man-section">
+                <div className="man-tools-section">
+                    <Button
+                        type="button"
+                        color="primary"
+                        onClick={() => {
+                            setAddModPopupOpen(true);
+                        }}
+                    >
+                        <FontAwesomeIcon icon={faUserPlus} /> Add mod user
+                    </Button>
+                    <Button
+                        type="button"
+                        color="success"
+                        onClick={() => {
+                            setRefresh(!refresh);
+                        }}
+                    >
+                        <FontAwesomeIcon icon={faSyncAlt} />
+                    </Button>
+                </div>
+                <div className="list-mod">
+                    {renListMods()}
+                </div>
+                {popupOpen ? <OptionPopup onHandleCancel={receiveCancel} username={currentPopupUser} /> : ""}
+                {addModPopupOpen ? <AddModPopup onHandleCancel={receiveAddModCancel} /> : ""}
             </div>
-            {popupOpen ? <OptionPopup onHandleCancel={receiveCancel} username={currentPopupUser} /> : ""}
-            {addModPopupOpen ? <AddModPopup onHandleCancel={receiveAddModCancel} /> : ""}
         </div>
     );
 }

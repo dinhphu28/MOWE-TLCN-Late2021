@@ -11,3 +11,8 @@
 .my-reports-list .my-report-card p {
     text-align: justify;
 }
+
+.btn-sw-report-separate {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}

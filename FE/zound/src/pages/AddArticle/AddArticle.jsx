@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Input, Label } from 'reactstrap';
 import articleApi from '../../api/articleApi';
+import categoryApi from '../../api/categoryApi';
 import { ARTICLE_CATEGORIES } from '../../constants/global';
 import UploadFiles from '../../features/FileUploadCard';
 import "./AddArticle.css";
@@ -16,6 +17,71 @@ function AddArticle(props) {
     const [thumbnailUrl, setThumbnailUrl] = useState("");
     const [audioFileName, setAudioFileName] = useState("");
     const [category, setCategory] = useState(ARTICLE_CATEGORIES.front_end.queryValue);
+    const [categoryList, setCategoryList] = useState([]);
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+        const fetchCategory = async () => {
+            try {
+                const response = await categoryApi.getAll();
+
+                console.log("Fetch category successfully: ", response);
+
+                setCategoryList(response);
+
+                setLoaded(true);
+            } catch (error) {
+                console.log("Failed to fetch category: ", error);
+            }
+        }
+
+        fetchCategory();
+    }, []);
+
+    const isInDefaultCategory = (catNameParam) => {
+        if(catNameParam === "front-end" ||
+            catNameParam === "back-end" ||
+            catNameParam === "ios" ||
+            catNameParam === "android" ||
+            catNameParam === "tips-tricks" ||
+            catNameParam === undefined
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    const isInDefaultCategoryLabel = (catLabelParam) => {
+        if(catLabelParam === ARTICLE_CATEGORIES.front_end.label ||
+            catLabelParam === ARTICLE_CATEGORIES.back_end.label ||
+            catLabelParam === ARTICLE_CATEGORIES.ios.label ||
+            catLabelParam === ARTICLE_CATEGORIES.android.label ||
+            catLabelParam === ARTICLE_CATEGORIES.tips_tricks.label
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    const loadListCategory = () => {
+        if(loaded) {
+            const listItems = categoryList.map((item) => {
+                if(!isInDefaultCategory(item.name)) {
+                    return <option
+                        key={item.name}
+                    >
+                        {item.name}
+                    </option>
+                }
+                
+                return "";
+            });
+
+            return listItems;
+        }
+    };
 
     const changeInputValueTitle = (e) => {
         setTitle(e.target.value);
@@ -30,7 +96,13 @@ function AddArticle(props) {
     //     setThumbnailUrl(e.target.value);
     // };
     const changeInputValueCategory = (e) => {
-        setCategory(getQueryValueFromLabel(e.target.value));
+        if(!isInDefaultCategoryLabel(e.target.value)) {
+            setCategory(e.target.value);
+        } else {
+            setCategory(getQueryValueFromLabel(e.target.value));
+        }
+
+        // console.log("Changed category: ", category);
     };
 
     const validationForm = () => {
@@ -230,6 +302,7 @@ function AddArticle(props) {
                         <option>
                             {ARTICLE_CATEGORIES.tips_tricks.label}
                         </option>
+                        {loaded ? loadListCategory() : undefined}
                     </Input>
                 </div>
                 <div className="confirm-btn">

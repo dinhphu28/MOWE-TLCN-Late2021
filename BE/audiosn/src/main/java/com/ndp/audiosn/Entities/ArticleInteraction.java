@@ -22,8 +22,8 @@ public class ArticleInteraction {
     private Integer id;
 
     @Column(name = "col_comment_score")
-    private Float commentScore;
+    private Integer commentScore;
 
     @Column(name = "col_vote_score")
-    private Float voteScore;
+    private Integer voteScore;
 }

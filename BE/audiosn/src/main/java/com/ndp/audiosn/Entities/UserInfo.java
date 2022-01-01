@@ -29,4 +29,7 @@ public class UserInfo {
 
     @Column(name = "col_email")
     private String email;
+
+    @Column(name = "col_email_verified")
+    private Boolean emailVerified;
 }

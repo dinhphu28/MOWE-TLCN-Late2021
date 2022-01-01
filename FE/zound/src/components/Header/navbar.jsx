@@ -55,7 +55,7 @@ function UserAvtNav(props) {
 
         props.onHandleChange();
 
-        navigate("/articles");
+        navigate("/");
     };
 
     return (

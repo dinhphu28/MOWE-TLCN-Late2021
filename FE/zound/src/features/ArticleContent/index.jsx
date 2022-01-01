@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { faCaretUp, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCaretUp, faEye, faEyeSlash, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -32,6 +32,7 @@ function ArticleContent(props) {
     const [tmpVoteScore, setTmpVoteScore] = useState(article.voteScore);
     const [editPopupOpen, setEditPopupOpen] = useState(false);
     const [reportPopupOpen, setReportPopupOpen] = useState(false);
+    const [hideState, setHideState] = useState(false);
     // const [refresh, setRefresh] = useState(false);
 
     let navigate = useNavigate();
@@ -42,8 +43,10 @@ function ArticleContent(props) {
             fetchGetUVS();
         }
 
+        setHideState(article.hidden);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [article.hidden]);
 
     const fetchGetUVS = async () => {
         try {  
@@ -102,6 +105,23 @@ function ArticleContent(props) {
         }
     }
 
+    const fetchHideShowArticle = async (hiddenState) => {
+        if((localStorage.getItem("role") === "mod") || localStorage.getItem("role") === "admin") {
+            try {
+                const data = {
+                    hidden: hiddenState
+                };
+
+                await articleApi.hideShow(article.id, data);
+
+                // console.log("Fetch hide-show article successfully: ", response);
+
+            } catch(error) {
+                console.log("Failed to fetch hide-show article: ", error);
+            }
+        }
+    }
+
     const receiveCancel = () => {
         setEditPopupOpen(false);
     }
@@ -128,30 +148,12 @@ function ArticleContent(props) {
                             >
                                 <FontAwesomeIcon icon={faPen} /> Edit
                             </Button>
-                            {/* <Button id="btn-del"
-                                type="button"
-                                color="danger"
-                                onClick={() => {
-                                    fetchDeleteArticle(article.id);
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faTrash} /> Delete
-                            </Button> */}
                         </> : ""}
 
                     {((localStorage.getItem("role") === "norm" && article.author === localStorage.getItem("username")) ||
-                        (localStorage.getItem("role") === "mod") ||
+                        // (localStorage.getItem("role") === "mod") ||
                         localStorage.getItem("role") === "admin") ?
                         <>
-                            {/* <Button id="btn-edit"
-                                type="button"
-                                color="primary"
-                                onClick={() => {
-                                    setEditPopupOpen(true);
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faPen} /> Edit
-                            </Button> */}
                             <Button id="btn-del"
                                 type="button"
                                 color="danger"
@@ -162,6 +164,33 @@ function ArticleContent(props) {
                                 <FontAwesomeIcon icon={faTrash} /> Delete
                             </Button>
                         </> : ""}
+                    {((localStorage.getItem("role") === "mod") || localStorage.getItem("role") === "admin") ?
+                    <>
+                        {hideState ?
+                            <Button id="btn-hide"
+                                type="button"
+                                color="dark"
+                                onClick={() => {
+                                    // fetchDeleteArticle(article.id);
+                                    fetchHideShowArticle(false); // show
+                                    setHideState(false);
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faEyeSlash} /> Show
+                            </Button> :
+                            <Button id="btn-hide"
+                                type="button"
+                                color="dark"
+                                onClick={() => {
+                                    // fetchDeleteArticle(article.id);
+                                    fetchHideShowArticle(true); // hide
+                                    setHideState(true);
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faEye} /> Hide
+                            </Button>
+                        }
+                    </> : ""}
                 </div>
             </div>
             <div className="article-info">

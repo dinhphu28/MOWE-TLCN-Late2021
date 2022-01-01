@@ -35,8 +35,20 @@ public class ArticleService {
         return articles;
     }
 
+    public List<Article> retrieveOneCommonPageAndHidden(Integer pageNumber, Boolean hidden) {
+        List<Article> articles = repo.findByHidden(hidden, PageRequest.of(pageNumber, 10, Sort.by("id").descending()));
+
+        return articles;
+    }
+
     public List<Article> retrieveOnePageByCategory(Integer pageNumber, String category) {
         List<Article> articles = repo.findByCategory(category, PageRequest.of(pageNumber, 10, Sort.by("id").descending()));
+
+        return articles;
+    }
+
+    public List<Article> retrieveOnePageByCategoryAndHidden(Integer pageNumber, String category, Boolean hidden) {
+        List<Article> articles = repo.findByCategoryAndHidden(category, hidden, PageRequest.of(pageNumber, 10, Sort.by("id").descending()));
 
         return articles;
     }
@@ -46,6 +58,14 @@ public class ArticleService {
             return repo.count();
         } else {
             return repo.countByCategory(categoryName);
+        }
+    }
+
+    public Long retrieveNumOfPagesAndHidden(String categoryName, Boolean hidden) {
+        if(categoryName == null) {
+            return repo.countByHidden(hidden);
+        } else {
+            return repo.countByCategoryAndHidden(categoryName, hidden);
         }
     }
 

@@ -13,5 +13,13 @@ import org.springframework.stereotype.Repository;
 public interface ArticleRepo extends JpaRepository<Article, Integer> {
     List<Article> findByCategory(String category, Pageable pageable);
 
+    List<Article> findByCategoryAndHidden(String category, Boolean hidden, Pageable pageable);
+
+    List<Article> findByHidden(Boolean hidden, Pageable pageable);
+
     Long countByCategory(String category);
+
+    Long countByCategoryAndHidden(String category, Boolean hidden);
+
+    Long countByHidden(Boolean hidden);
 }

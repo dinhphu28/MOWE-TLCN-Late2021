@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardBody, CardLink, CardSubtitle, CardText, CardTitle } from 'reactstrap';
+import { Button, Card, CardBody, CardLink, CardSubtitle, CardText, CardTitle, ButtonGroup } from 'reactstrap';
 // import PropTypes from 'prop-types';
 import "./ReportMan.css";
 import reportsApi from '../../api/reportsApi';
@@ -13,11 +13,16 @@ function ReportMan(props) {
     const [loaded, setLoaded] = useState(false);
     const [popupOpen, setPopupOpen] = useState(false);
     const [popupData, setPopupData] = useState({});
+    const [solved, setSolved] = useState(false);
 
     useEffect(() => {
         const fetchListReports = async () => {
             try {
-                const response = await reportsApi.getAll();
+                const params = {
+                    solved: solved
+                };
+
+                const response = await reportsApi.getAll(params);
 
                 // console.log("Fetch list reports successfully: ", response);
 
@@ -31,7 +36,22 @@ function ReportMan(props) {
         }
 
         fetchListReports();
-    }, []);
+    }, [solved]);
+
+    const fetchSolvedOrUnsolved = async (id, newSolvedState) => {
+        try {
+            const data = {
+                solved: newSolvedState
+            };
+
+            await reportsApi.putSolvedUnsolved(id, data);
+
+            // console.log("Fetch update solved state successfully: ", response);
+
+        } catch (error) {
+            console.log("Failed to fetch solved-unsolved: ", error);
+        }
+    }
 
     const loadListReportCards = () => {
         if(loaded) {
@@ -57,6 +77,14 @@ function ReportMan(props) {
                     <CardText>
                         {item.content}
                     </CardText>
+                    {item.solved ?
+                        <CardText style={{color: "#198754"}}>
+                            Solved
+                        </CardText> :
+                        <CardText style={{color: "#ffc107"}}>
+                            Unsolved
+                        </CardText>
+                    }
                     <CardLink
                         href='#'
                         onClick={() => {
@@ -73,9 +101,26 @@ function ReportMan(props) {
                     <CardLink href={"/articles/" + item.articleUrl}>
                         Go to article
                     </CardLink>
-                    {/* <Button>
-                        Button
-                    </Button> */}
+                    {item.solved ?
+                        <Button
+                            color="primary"
+                            className="float-end"
+                            onClick={() => {
+                                fetchSolvedOrUnsolved(item.id, false);
+                            }}
+                        >
+                            Mark as unsolved
+                        </Button> :
+                        <Button
+                            color="primary"
+                            className="float-end"
+                            onClick={() => {
+                                fetchSolvedOrUnsolved(item.id, true);
+                            }}
+                        >
+                            Mark as solved
+                        </Button>
+                    }
                     </CardBody>
                 </Card>
             </div>
@@ -90,14 +135,37 @@ function ReportMan(props) {
     }
 
     return (
-        <div className="my-reports-list">
-            {loadListReportCards()}
+        <div>
+            <div className='btn-sw-report-separate'>
+                <ButtonGroup className='float-end'>
+                    <Button
+                        color={solved ? "secondary" : "primary"}
+                        onClick={() => {
+                            setSolved(false);
+                        }}
+                    >
+                        Unsolved
+                    </Button>
+                    <Button
+                        color={solved ? "primary" : "secondary"}
+                        onClick={() => {
+                            setSolved(true);
+                        }}
+                    >
+                        Solved
+                    </Button>
+                </ButtonGroup>
+            </div>
+            <br />
+            <div className="my-reports-list">
+                {loadListReportCards()}
 
-            {popupOpen ? <LIArticleReportPopup
-                onHandleChange={receiveCancel}
-                articleId={popupData.articleId}
-                articleTitle={popupData.articleTitle}
-            />: ""}
+                {popupOpen ? <LIArticleReportPopup
+                    onHandleChange={receiveCancel}
+                    articleId={popupData.articleId}
+                    articleTitle={popupData.articleTitle}
+                />: ""}
+            </div>
         </div>
     );
 }

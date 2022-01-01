@@ -14,4 +14,6 @@ public interface ArticleReportRepo extends JpaRepository<ArticleReport, Integer>
     List<ArticleReport> findByOrderByIdDesc();
 
     Long deleteByArticleId(Integer articleId);
+
+    List<ArticleReport> findBySolved(Boolean solved);
 }

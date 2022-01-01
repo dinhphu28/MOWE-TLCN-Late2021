@@ -7,6 +7,7 @@ import com.ndp.audiosn.Entities.Article;
 import com.ndp.audiosn.Entities.Comment;
 import com.ndp.audiosn.Entities.UserVoteState;
 import com.ndp.audiosn.Models.Article.ArticleCreateModel;
+import com.ndp.audiosn.Models.Article.ArticleHideShowModel;
 import com.ndp.audiosn.Models.Article.ArticleItemReturnModel;
 import com.ndp.audiosn.Models.Article.ArticleUpdateModel;
 import com.ndp.audiosn.Models.Article.PageOfArticleModel;
@@ -68,60 +69,113 @@ public class ArticleREST {
     @GetMapping (
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Object> retrieveAllArticles(@RequestParam(value = "page", required = true) Integer pageNum, @RequestParam(value = "category", required = false) String categoryName) {
+    public ResponseEntity<Object> retrieveAllArticles(@RequestParam(value = "page", required = true) Integer pageNum, @RequestParam(value = "category", required = false) String categoryName, @RequestParam(value = "hidden", required = false) Boolean hidden) {
         
         PageOfArticleModel pageOfArticleModel = new PageOfArticleModel();
 
         if (categoryName == null) {
-            List<Article> articles = articleService.retrieveOneCommonPage(pageNum);
+            if(hidden == null) {
+                List<Article> articles = articleService.retrieveOneCommonPage(pageNum);
 
-            Integer noPage = (int)Math.ceil(Double.valueOf(articleService.retrieveNumOfPages(categoryName).intValue()) / 10); // ceiling number of pages and convert to Integer
+                Integer noPage = (int)Math.ceil(Double.valueOf(articleService.retrieveNumOfPages(categoryName).intValue()) / 10); // ceiling number of pages and convert to Integer
 
-            List<ArticleItemReturnModel> articleItemReturnModels = new ArrayList<ArticleItemReturnModel>();
-            for(Article articleItem : articles) {
-                List<UserVoteState> userVoteStates = userVoteStateService.retrieveByArticleId(articleItem.getId());
+                List<ArticleItemReturnModel> articleItemReturnModels = new ArrayList<ArticleItemReturnModel>();
+                for(Article articleItem : articles) {
+                    List<UserVoteState> userVoteStates = userVoteStateService.retrieveByArticleId(articleItem.getId());
 
-                Integer voteScore = 0;
+                    Integer voteScore = 0;
 
-                for(UserVoteState uvsItem : userVoteStates) {
-                    voteScore = voteScore + uvsItem.getVoteState();
+                    for(UserVoteState uvsItem : userVoteStates) {
+                        voteScore = voteScore + uvsItem.getVoteState();
+                    }
+
+                    ArticleItemReturnModel articleItemReturnModel = new ArticleItemReturnModel(articleItem, voteScore);
+
+                    articleItemReturnModels.add(articleItemReturnModel);
                 }
 
-                ArticleItemReturnModel articleItemReturnModel = new ArticleItemReturnModel(articleItem, voteScore);
+                pageOfArticleModel.setNumberOfPages(noPage);
+                pageOfArticleModel.setCurrentPage(pageNum);
+                pageOfArticleModel.setArticles(articleItemReturnModels);
 
-                articleItemReturnModels.add(articleItemReturnModel);
+                return new ResponseEntity<>(pageOfArticleModel, HttpStatus.OK);
+            } else {
+                List<Article> articles = articleService.retrieveOneCommonPageAndHidden(pageNum, hidden);
+
+                Integer noPage = (int)Math.ceil(Double.valueOf(articleService.retrieveNumOfPagesAndHidden(categoryName, hidden).intValue()) / 10);
+
+                List<ArticleItemReturnModel> articleItemReturnModels = new ArrayList<ArticleItemReturnModel>();
+                for(Article articleItem : articles) {
+                    List<UserVoteState> userVoteStates = userVoteStateService.retrieveByArticleId(articleItem.getId());
+
+                    Integer voteScore = 0;
+
+                    for(UserVoteState uvsItem : userVoteStates) {
+                        voteScore = voteScore + uvsItem.getVoteState();
+                    }
+
+                    ArticleItemReturnModel articleItemReturnModel = new ArticleItemReturnModel(articleItem, voteScore);
+
+                    articleItemReturnModels.add(articleItemReturnModel);
+                }
+
+                pageOfArticleModel.setNumberOfPages(noPage);
+                pageOfArticleModel.setCurrentPage(pageNum);
+                pageOfArticleModel.setArticles(articleItemReturnModels);
+
+                return new ResponseEntity<>(pageOfArticleModel, HttpStatus.OK);
             }
-
-            pageOfArticleModel.setNumberOfPages(noPage);
-            pageOfArticleModel.setCurrentPage(pageNum);
-            pageOfArticleModel.setArticles(articleItemReturnModels);
-
-            return new ResponseEntity<>(pageOfArticleModel, HttpStatus.OK);
         } else {
-            List<Article> articles = articleService.retrieveOnePageByCategory(pageNum, categoryName);
+            if(hidden == null) {
+                List<Article> articles = articleService.retrieveOnePageByCategory(pageNum, categoryName);
 
-            Integer noPage = (int)Math.ceil(Double.valueOf(articleService.retrieveNumOfPages(categoryName).intValue()) / 10);
+                Integer noPage = (int)Math.ceil(Double.valueOf(articleService.retrieveNumOfPages(categoryName).intValue()) / 10);
 
-            List<ArticleItemReturnModel> articleItemReturnModels = new ArrayList<ArticleItemReturnModel>();
-            for(Article articleItem : articles) {
-                List<UserVoteState> userVoteStates = userVoteStateService.retrieveByArticleId(articleItem.getId());
+                List<ArticleItemReturnModel> articleItemReturnModels = new ArrayList<ArticleItemReturnModel>();
+                for(Article articleItem : articles) {
+                    List<UserVoteState> userVoteStates = userVoteStateService.retrieveByArticleId(articleItem.getId());
 
-                Integer voteScore = 0;
+                    Integer voteScore = 0;
 
-                for(UserVoteState uvsItem : userVoteStates) {
-                    voteScore = voteScore + uvsItem.getVoteState();
+                    for(UserVoteState uvsItem : userVoteStates) {
+                        voteScore = voteScore + uvsItem.getVoteState();
+                    }
+
+                    ArticleItemReturnModel articleItemReturnModel = new ArticleItemReturnModel(articleItem, voteScore);
+
+                    articleItemReturnModels.add(articleItemReturnModel);
                 }
 
-                ArticleItemReturnModel articleItemReturnModel = new ArticleItemReturnModel(articleItem, voteScore);
+                pageOfArticleModel.setNumberOfPages(noPage);
+                pageOfArticleModel.setCurrentPage(pageNum);
+                pageOfArticleModel.setArticles(articleItemReturnModels);
 
-                articleItemReturnModels.add(articleItemReturnModel);
+                return new ResponseEntity<>(pageOfArticleModel, HttpStatus.OK);
+            } else {
+                List<Article> articles = articleService.retrieveOnePageByCategoryAndHidden(pageNum, categoryName, hidden);
+
+                Integer noPage = (int)Math.ceil(Double.valueOf(articleService.retrieveNumOfPagesAndHidden(categoryName, hidden).intValue()) / 10);
+                List<ArticleItemReturnModel> articleItemReturnModels = new ArrayList<ArticleItemReturnModel>();
+                for(Article articleItem : articles) {
+                    List<UserVoteState> userVoteStates = userVoteStateService.retrieveByArticleId(articleItem.getId());
+
+                    Integer voteScore = 0;
+
+                    for(UserVoteState uvsItem : userVoteStates) {
+                        voteScore = voteScore + uvsItem.getVoteState();
+                    }
+
+                    ArticleItemReturnModel articleItemReturnModel = new ArticleItemReturnModel(articleItem, voteScore);
+
+                    articleItemReturnModels.add(articleItemReturnModel);
+                }
+
+                pageOfArticleModel.setNumberOfPages(noPage);
+                pageOfArticleModel.setCurrentPage(pageNum);
+                pageOfArticleModel.setArticles(articleItemReturnModels);
+
+                return new ResponseEntity<>(pageOfArticleModel, HttpStatus.OK);
             }
-
-            pageOfArticleModel.setNumberOfPages(noPage);
-            pageOfArticleModel.setCurrentPage(pageNum);
-            pageOfArticleModel.setArticles(articleItemReturnModels);
-
-            return new ResponseEntity<>(pageOfArticleModel, HttpStatus.OK);
         }
     }
 
@@ -259,6 +313,37 @@ public class ArticleREST {
             entity = new ResponseEntity<>("{ \"Notice\": \"Deleted\" }", HttpStatus.OK);
         } else {
             entity = new ResponseEntity<>("{ \"Notice\": \"Not found\" }", HttpStatus.NOT_FOUND);
+        }
+
+        return entity;
+    }
+
+    @PutMapping(
+        value = "{articleId}/hide",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> hideShowArticle(@PathVariable("articleId") Integer articleId, @RequestBody ArticleHideShowModel articleHideShowModel) {
+        ResponseEntity<Object> entity;
+
+        if(articleHideShowModel.getHidden() == null) {
+            entity = new ResponseEntity<>("{ \"Notice\": \"Not allow null\" }", HttpStatus.BAD_REQUEST);
+        } else {
+            Article tmpArticle = articleService.retrieveOne(articleId);
+
+            if(tmpArticle == null) {
+                entity = new ResponseEntity<>("{ \"Notice\": \"Not found\" }", HttpStatus.NOT_FOUND);
+            } else {
+                tmpArticle.setHidden(articleHideShowModel.getHidden());
+
+                Article tmpSaved = articleService.updateOne(tmpArticle);
+
+                if(tmpSaved == null) {
+                    entity = new ResponseEntity<>("{ \"Notice\": \"Failed\" }", HttpStatus.INTERNAL_SERVER_ERROR);
+                } else {
+                    entity = new ResponseEntity<>(tmpSaved, HttpStatus.OK);
+                }
+            }
         }
 
         return entity;

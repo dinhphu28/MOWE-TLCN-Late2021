@@ -38,6 +38,7 @@ CREATE TABLE tbl_user_info (
     col_display_name NVARCHAR(100) NULL,
     col_avatar VARCHAR(500) NULL,
     col_email VARCHAR(100) NULL,
+    col_email_verified BIT DEFAULT 0 NULL,
 
     PRIMARY KEY(col_username)
 )
@@ -84,6 +85,7 @@ CREATE TABLE tbl_article (
     col_url NVARCHAR(500) UNIQUE NOT NULL,
     col_category VARCHAR(30) REFERENCES tbl_category(col_category_name) NOT NULL,
     col_thumbnail_url NVARCHAR(500) NOT NULL,
+    col_hidden BIT DEFAULT 0 NOT NULL,
 
     PRIMARY KEY(col_id)
 )
@@ -119,8 +121,8 @@ GO
 -- Article's interactive score
 CREATE TABLE tbl_article_interaction (
     col_article_id INT REFERENCES tbl_article(col_id),
-    col_comment_score FLOAT NOT NULL,
-    col_vote_score FLOAT NOT NULL,
+    col_comment_score INT NOT NULL,
+    col_vote_score INT NOT NULL,
 
     PRIMARY KEY(col_article_id)
 )
@@ -134,6 +136,7 @@ CREATE TABLE tbl_article_report (
     col_date DATE NOT NULL,
     col_time TIME NOT NULL,
     col_content NTEXT NOT NULL,
+    col_solved BIT DEFAULT 0 NOT NULL,
 
     PRIMARY KEY(col_id)
 )

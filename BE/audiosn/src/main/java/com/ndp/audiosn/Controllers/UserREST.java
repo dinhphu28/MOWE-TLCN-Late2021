@@ -51,7 +51,7 @@ public class UserREST {
     @GetMapping(
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Object> retrieveByRole(@RequestParam(value = "role", required = true) String role, @RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<Object> retrieveByRole(@RequestParam(value = "role", required = true) String role, @RequestParam(value = "active", required = true) Boolean active, @RequestHeader("Authorization") String authorization) {
         ResponseEntity<Object> entity;
 
         String token = authHeaderProcessing.getTokenFromAuthHeader(authorization);
@@ -82,17 +82,18 @@ public class UserREST {
 
                 Boolean tmpActive = tmpUser.getActive();
 
-                UserInfo tmpUserInfo = userInfoService.retrieveOne(tmpUsername);
+                if(tmpActive == active) {
+                    UserInfo tmpUserInfo = userInfoService.retrieveOne(tmpUsername);
 
-                String tmpAvatar = "";
+                    String tmpAvatar = "";
 
-                if(tmpUserInfo != null) {
-                    tmpAvatar = tmpUserInfo.getAvatar();
+                    if(tmpUserInfo != null) {
+                        tmpAvatar = tmpUserInfo.getAvatar();
+                    }
+                    UsersManModelReturn tmpUsersManModelReturn = new UsersManModelReturn(tmpUsername, tmpActive, tmpAvatar);
+
+                    usersManModelReturns.add(tmpUsersManModelReturn);
                 }
-
-                UsersManModelReturn tmpUsersManModelReturn = new UsersManModelReturn(tmpUsername, tmpActive, tmpAvatar);
-
-                usersManModelReturns.add(tmpUsersManModelReturn);
             }
 
             entity = new ResponseEntity<>(usersManModelReturns, HttpStatus.OK);

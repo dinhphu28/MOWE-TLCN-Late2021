@@ -14,14 +14,42 @@ import { ARTICLE_CATEGORIES } from '../../constants/global.js';
 function MainPage(props) {
 
     const [page, setPage] = useState(0);
-    const [category, setCategory] = useState(ARTICLE_CATEGORIES.default)
+    const [category, setCategory] = useState(ARTICLE_CATEGORIES.default.queryValue)
+    const [hidden, setHidden] = useState(false);
     const [articlesCrude, setArticlesCrude] = useState([]);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
+        // const fetchArticleCrude = async () => {
+        //     try {
+        //         const params = {page: page, category: category.queryValue};
+
+        //         const response = await articleApi.getAll(params);
+
+        //         // console.log("Fetch article crude successfully", response);
+
+        //         const data = response;
+
+        //         setArticlesCrude(data);
+
+        //         // console.log("These are articles list: ", data);
+
+        //         setLoaded(true);
+
+        //     } catch(error) {
+        //         // throw Promise;
+        //         console.log("Failed to fetch article crude: ", error);
+        //     }
+        // }
+        // fetchArticleCrude();
+
         const fetchArticleCrude = async () => {
             try {
-                const params = {page: page, category: category.queryValue};
+                const params = {
+                    page: page,
+                    category: category,
+                    hidden: hidden
+                };
 
                 const response = await articleApi.getAll(params);
 
@@ -41,7 +69,7 @@ function MainPage(props) {
             }
         }
         fetchArticleCrude();
-    }, [category.queryValue, page]);
+    }, [category, hidden, page]);
 
     // const listItems = articlesList.map((item) =>
     //     // <ArticleCard
@@ -95,10 +123,16 @@ function MainPage(props) {
         setCategory(categoryName);
     };
 
+    const receiveHidden = (hidden) => {
+        setPage(0);
+        setHidden(hidden);
+    }
+
     return (
 
         <div>
-            <NavMenu onHandleChange={receiveCategory}/>
+            {/* <NavMenu onHandleChange={receiveCategory}/> */}
+            <NavMenu onHandleChangeCat={receiveCategory} onHandleChangeHid={receiveHidden} />
 
             {/* {loading ? <ArticlesList articlesCrude={articlesCrude} /> : ""} */}
 

@@ -20,6 +20,6 @@ public class UserInfoUpdateModel {
 
     public UserInfo toUserInfoEntity(String username) {
         // return new UserInfo(username, avatar, email);
-        return new UserInfo(username, displayName, avatar, email);
+        return new UserInfo(username, displayName, avatar, email, false);
     }
 }

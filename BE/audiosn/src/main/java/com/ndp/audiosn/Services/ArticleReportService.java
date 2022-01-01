@@ -25,6 +25,10 @@ public class ArticleReportService {
         return repo.findByArticleIdOrderByIdDesc(articleId);
     }
 
+    public List<ArticleReport> retrieveBySolved(Boolean solved) {
+        return repo.findBySolved(solved);
+    }
+
     public ArticleReport retrieveOne(Integer id) {
         ArticleReport sth = null;
 

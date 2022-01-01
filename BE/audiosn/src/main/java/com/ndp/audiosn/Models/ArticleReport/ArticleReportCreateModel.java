@@ -22,6 +22,6 @@ public class ArticleReportCreateModel {
     private String content;
 
     public ArticleReport toArticleReport(LocalDate date, LocalTime time) {
-        return new ArticleReport(0, articleId, author, date, time, content);
+        return new ArticleReport(0, articleId, author, date, time, content, false);
     }
 }

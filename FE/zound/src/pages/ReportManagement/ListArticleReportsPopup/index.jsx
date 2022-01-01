@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardBody, CardSubtitle, CardText, CardTitle } from 'reactstrap';
+import { Button, Card, CardBody, CardSubtitle, CardText, CardTitle } from 'reactstrap';
 import "./styles.css";
 // import PropTypes from 'prop-types';
 import reportsApi from '../../../api/reportsApi';
@@ -34,6 +34,21 @@ function LIArticleReportPopup(props) {
         fetchListReports();
     }, [articleId]);
 
+    const fetchSolvedOrUnsolved = async (id, newSolvedState) => {
+        try {
+            const data = {
+                solved: newSolvedState
+            };
+
+            await reportsApi.putSolvedUnsolved(id, data);
+
+            // console.log("Fetch update solved state successfully: ", response);
+
+        } catch (error) {
+            console.log("Failed to fetch solved-unsolved: ", error);
+        }
+    }
+
     const loadListReportCards = () => {
         if(loaded) {
             const listItems = listReport.map((item) =>
@@ -58,9 +73,34 @@ function LIArticleReportPopup(props) {
                     <CardText>
                         {item.content}
                     </CardText>
-                    {/* <Button>
-                        Button
-                    </Button> */}
+                    {item.solved ?
+                        <CardText style={{color: "#198754"}}>
+                            Solved
+                        </CardText> :
+                        <CardText style={{color: "#ffc107"}}>
+                            Unsolved
+                        </CardText>
+                    }
+                    {item.solved ?
+                        <Button
+                            color="primary"
+                            className="float-end"
+                            onClick={() => {
+                                fetchSolvedOrUnsolved(item.id, false);
+                            }}
+                        >
+                            Mark as unsolved
+                        </Button> :
+                        <Button
+                            color="primary"
+                            className="float-end"
+                            onClick={() => {
+                                fetchSolvedOrUnsolved(item.id, true);
+                            }}
+                        >
+                            Mark as solved
+                        </Button>
+                    }
                     </CardBody>
                 </Card>
             </div>

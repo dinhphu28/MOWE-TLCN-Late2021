@@ -56,4 +56,7 @@ public class Article {
 
     @Column(name = "col_thumbnail_url")
     private String thumbnailUrl;
+
+    @Column(name = "col_hidden")
+    private Boolean hidden;
 }

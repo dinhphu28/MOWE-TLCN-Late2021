@@ -20,6 +20,8 @@ public class UserInfoReturnModel {
 
     private String email;
 
+    private Boolean emailVerified;
+
     public UserInfoReturnModel (UserInfo userInfo) {
         username = userInfo.getUsername();
 
@@ -28,5 +30,7 @@ public class UserInfoReturnModel {
         avatar = userInfo.getAvatar();
 
         email = userInfo.getEmail();
+
+        emailVerified = userInfo.getEmailVerified();
     }
 }

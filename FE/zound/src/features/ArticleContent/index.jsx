@@ -151,9 +151,9 @@ function ArticleContent(props) {
                             </Button>
                         </> : ""}
 
-                    {((localStorage.getItem("role") === "norm" && article.author === localStorage.getItem("username")) ||
+                    {((article.author === localStorage.getItem("username"))) ?
                         // (localStorage.getItem("role") === "mod") ||
-                        localStorage.getItem("role") === "admin") ?
+                        // localStorage.getItem("role") === "admin") ?
                         <>
                             <Button id="btn-del"
                                 type="button"

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // import { Component } from "react";
 import authApi from '../api/authApi';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function SignInPage(props) {
     // constructor(props) {
@@ -127,6 +127,12 @@ function SignInPage(props) {
                 <button className="btn btn-primary" type="submit">
                     Sign In
                 </button>
+                <Link
+                    to="/forget-password"
+                    className="float-end"
+                >
+                    Forgot password
+                </Link>
             </form>
         </div>
     );

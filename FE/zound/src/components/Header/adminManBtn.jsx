@@ -13,7 +13,7 @@ class AdminManBtn extends Component {
     render() {
         return (
             <div>
-                <Link className="my-svg-btn" to="/admin">
+                <Link className="my-svg-btn" to="/user-management">
                     <FontAwesomeIcon icon={faCog} />
                 </Link>
             </div>

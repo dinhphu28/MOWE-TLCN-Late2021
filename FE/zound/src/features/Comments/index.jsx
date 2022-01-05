@@ -24,11 +24,14 @@ function Comments(props) {
 
     const [commentsList, setCommentsList] = useState([]);
     const [loaded, setLoaded] = useState(false);
+    const [hiddenComments] = useState(false);
 
     useEffect(() => {
         const fetchComments = async () => {
             try{
-                const response = await commentApi.getAll(articleId);
+                const params = (localStorage.getItem("role") === "mod" || localStorage.getItem("role") === "admin") ? {} : { hidden: hiddenComments };
+
+                const response = await commentApi.getAll(articleId, params);
 
                 const data = response;
 
@@ -45,7 +48,7 @@ function Comments(props) {
 
         fetchComments();
         setInterval(fetchComments, 2000); // reload comments after every 2s
-    }, [articleId]);
+    }, [articleId, hiddenComments]);
 
     const loadListComments = () => {
         if(loaded) {

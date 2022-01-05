@@ -1,10 +1,10 @@
 import axiosClient from "./axiosClient";
 
 const commentApi = {
-    getAll: (articleId) => {
+    getAll: (articleId, params) => {
         const url = `/articles/${articleId}/comments`;
 
-        return axiosClient.get(url);
+        return axiosClient.get(url, {params});
     },
 
     post: (articleId, data) => {
@@ -15,6 +15,12 @@ const commentApi = {
                 'Authorization': 'Bearer ' + localStorage.getItem("token")
             }
         });
+    },
+
+    hideShow: (articleId, commentId, data) => {
+        const url = `/articles/${articleId}/comments/${commentId}/hide`;
+
+        return axiosClient.put(url, data);
     }
 };
 

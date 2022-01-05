@@ -100,6 +100,7 @@ CREATE TABLE tbl_comment (
     col_time TIME NOT NULL,
     col_content NTEXT NOT NULL,
     col_audio_content VARCHAR(500) NULL,
+    col_hidden BIT DEFAULT 0 NOT NULL,
 
     PRIMARY KEY(col_id)
 )
@@ -132,6 +133,20 @@ GO
 CREATE TABLE tbl_article_report (
     col_id INT IDENTITY(1,1),
     col_article_id INT REFERENCES tbl_article(col_id) NOT NULL,
+    col_author VARCHAR(30) REFERENCES tbl_user(col_username) NOT NULL,
+    col_date DATE NOT NULL,
+    col_time TIME NOT NULL,
+    col_content NTEXT NOT NULL,
+    col_solved BIT DEFAULT 0 NOT NULL,
+
+    PRIMARY KEY(col_id)
+)
+GO
+
+-- Comment's report
+CREATE TABLE tbl_comment_report (
+    col_id INT IDENTITY(1,1),
+    col_comment_id INT REFERENCES tbl_comment(col_id) NOT NULL,
     col_author VARCHAR(30) REFERENCES tbl_user(col_username) NOT NULL,
     col_date DATE NOT NULL,
     col_time TIME NOT NULL,

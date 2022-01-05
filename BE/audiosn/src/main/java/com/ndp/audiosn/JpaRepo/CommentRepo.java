@@ -10,5 +10,7 @@ public interface CommentRepo extends JpaRepository<Comment, Integer> {
     
     List<Comment> findByArticleId(Integer articleId);
 
+    List<Comment> findByArticleIdAndHidden(Integer articleId, Boolean hidden);
+
     Long deleteByArticleId(Integer articleId);
 }

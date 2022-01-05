@@ -17,6 +17,18 @@ const authApi = {
         const url = `/auth/${username}`;
 
         return axiosClient.patch(url, data);
+    },
+
+    getTokenResetPasswd: (username) => {
+        const url = `/auth/forget-password/${username}`;
+
+        return axiosClient.get(url);
+    },
+
+    resetPasswd: (username, data) => {
+        const url = `/auth/forget-password/${username}`;
+
+        return axiosClient.patch(url, data);
     }
 }
 

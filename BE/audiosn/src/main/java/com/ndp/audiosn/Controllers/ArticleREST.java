@@ -12,11 +12,13 @@ import com.ndp.audiosn.Models.Article.ArticleItemReturnModel;
 import com.ndp.audiosn.Models.Article.ArticleUpdateModel;
 import com.ndp.audiosn.Models.Article.PageOfArticleModel;
 import com.ndp.audiosn.Models.Comment.CommentCreateModel;
+import com.ndp.audiosn.Models.Comment.CommentHideShowModel;
 import com.ndp.audiosn.Models.Comment.CommentUpdateModel;
 import com.ndp.audiosn.Models.UserVoteState.UVSReturnModel;
 import com.ndp.audiosn.Models.UserVoteState.UVSUpdateModel;
 import com.ndp.audiosn.Services.ArticleReportService;
 import com.ndp.audiosn.Services.ArticleService;
+import com.ndp.audiosn.Services.CommentReportService;
 import com.ndp.audiosn.Services.CommentService;
 import com.ndp.audiosn.Services.UserVoteStateService;
 import com.ndp.audiosn.Utils.Auth.JWT.jwtSecurity;
@@ -65,6 +67,9 @@ public class ArticleREST {
 
     @Autowired
     private ArticleReportService articleReportService;
+
+    @Autowired
+    private CommentReportService commentReportService;
 
     @GetMapping (
         produces = MediaType.APPLICATION_JSON_VALUE
@@ -299,7 +304,13 @@ public class ArticleREST {
         // Boolean authorized = jwt.VerifyToken(token, )
         // processing authorization here
 
+        List<Comment> comments = commentService.retrieveAllByArticleId(id);
+
         Boolean kk = false;
+
+        for(Comment item : comments) {
+            kk = commentReportService.deleteAllByCommentId(item.getId());
+        }
 
         kk = commentService.deleteAllByArticleId(id);
 
@@ -357,14 +368,20 @@ public class ArticleREST {
         value = "/{articleId}/comments",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Object> retrieveAllCommentsOfArticle(@PathVariable("articleId") Integer articleId) {
+    public ResponseEntity<Object> retrieveAllCommentsOfArticle(@PathVariable("articleId") Integer articleId, @RequestParam(value = "hidden", required = false) Boolean hidden) {
         ResponseEntity<Object> entity;
 
         List<Comment> comments;
 
-        comments = commentService.retrieveAllByArticleId(articleId);
+        if(hidden == null) {
+            comments = commentService.retrieveAllByArticleId(articleId);
 
-        entity = new ResponseEntity<>(comments, HttpStatus.OK);
+            entity = new ResponseEntity<>(comments, HttpStatus.OK);
+        } else {
+            comments = commentService.retrieveAllByArticleIdAndHidden(articleId, hidden);
+
+            entity = new ResponseEntity<>(comments, HttpStatus.OK);
+        }
 
         return entity;
     }
@@ -449,6 +466,43 @@ public class ArticleREST {
             }
         } else {
             entity = new ResponseEntity<>("{ \"Notice\": \"Unauthorized\" }", HttpStatus.UNAUTHORIZED);
+        }
+
+        return entity;
+    }
+
+    @PutMapping(
+        value = "/{articleId}/comments/{commentId}/hide",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> hideShowComment(@PathVariable("articleId") Integer articleId, @PathVariable("commentId") Integer commentId, @RequestBody CommentHideShowModel commentHideShowModel) {
+        ResponseEntity<Object> entity;
+
+        if(commentHideShowModel.getHidden() == null) {
+            entity = new ResponseEntity<>("{ \"Notice\": \"Not allow null\" }", HttpStatus.BAD_REQUEST);
+        } else {
+            Article tmpArticle = articleService.retrieveOne(articleId);
+
+            if(tmpArticle == null) {
+                entity = new ResponseEntity<>("{ \"Notice\": \"Not found\" }", HttpStatus.NOT_FOUND);
+            } else {
+                Comment tmpComment = commentService.retrieveOne(commentId);
+
+                if(tmpComment == null) {
+                    entity = new ResponseEntity<>("{ \"Notice\": \"Not found\" }", HttpStatus.NOT_FOUND);
+                } else {
+                    tmpComment.setHidden(commentHideShowModel.getHidden());
+
+                    Comment tmpSaved = commentService.updateOne(tmpComment);
+
+                    if(tmpSaved == null) {
+                        entity = new ResponseEntity<>("{ \"Notice\": \"Failed\" }", HttpStatus.INTERNAL_SERVER_ERROR);
+                    } else {
+                        entity = new ResponseEntity<>(tmpSaved, HttpStatus.OK);
+                    }
+                }
+            }
         }
 
         return entity;

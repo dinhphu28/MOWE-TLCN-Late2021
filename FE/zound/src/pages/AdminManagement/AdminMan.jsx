@@ -20,12 +20,13 @@ function AdminMan(props) {
     const [currentPopupUser, setCurrentPopupUser] = useState("");
     const [refresh, setRefresh] = useState(false);
     const [active, setActive] = useState(true);
+    const [role, setRole] = useState("norm");
 
     useEffect(() => {
         const fetchListMods = async () => {
             try {
                 const params = {
-                    role: "mod",
+                    role: role,
                     active: active
                 };
 
@@ -43,7 +44,7 @@ function AdminMan(props) {
         }
 
         fetchListMods();
-    }, [popupOpen, addModPopupOpen, refresh, active]);
+    }, [popupOpen, addModPopupOpen, refresh, active, role]);
 
     const receivePopupState = (username) => {
         setCurrentPopupUser(username);
@@ -140,6 +141,26 @@ function AdminMan(props) {
         <div>
             <div className="sw-state-separate">
                 {(localStorage.getItem("role") === "admin") ?
+                    <ButtonGroup className="float-start">
+                        <Button
+                            color={(role === "norm") ? "primary" : "secondary"}
+                            onClick={() => {
+                                setRole("norm")
+                            }}
+                        >
+                            Normal users
+                        </Button>
+                        <Button
+                            color={(role === "mod") ? "primary" : "secondary"}
+                            onClick={() => {
+                                setRole("mod");
+                            }}
+                        >
+                            Moderators
+                        </Button>
+                    </ButtonGroup>
+                : ""}
+                {(localStorage.getItem("role") === "mod" || localStorage.getItem("role") === "admin") ?
                     <ButtonGroup className="float-end">
                         <Button
                             color={active ? "primary" : "secondary"}
@@ -163,15 +184,17 @@ function AdminMan(props) {
             <br />
             <div className="container man-section">
                 <div className="man-tools-section">
-                    <Button
-                        type="button"
-                        color="primary"
-                        onClick={() => {
-                            setAddModPopupOpen(true);
-                        }}
-                    >
-                        <FontAwesomeIcon icon={faUserPlus} /> Add mod user
-                    </Button>
+                    {(localStorage.getItem("role") === "admin") ?
+                        <Button
+                            type="button"
+                            color="primary"
+                            onClick={() => {
+                                setAddModPopupOpen(true);
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faUserPlus} /> Add mod user
+                        </Button>
+                    : ""}
                     <Button
                         type="button"
                         color="success"

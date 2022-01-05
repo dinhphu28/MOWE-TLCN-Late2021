@@ -70,15 +70,27 @@ public class UserInfoREST {
                 entity = new ResponseEntity<>("{ \"Notice\": \"Not null\" }", HttpStatus.BAD_REQUEST);
             } else {
     
-                UserInfo tmpToSave = userInfoUpdateModel.toUserInfoEntity(username);
-    
+                UserInfo tmpToSave = userInfoUpdateModel.toUserInfoEntity(username, true);
+
+                UserInfo tmpCk = userInfoService.retrieveOne(username);
+
+                if(tmpCk != null) {
+                    if(tmpCk.getEmail().equalsIgnoreCase(tmpToSave.getEmail())) {
+                        tmpToSave.setEmailVerified(true);
+                    } else {
+                        tmpToSave.setEmailVerified(false);
+                    }
+                }
+
                 UserInfo tmpUserInfo = userInfoService.saveOne(tmpToSave);
     
-                if(tmpUserInfo == null) {
-                    entity = new ResponseEntity<>("{ \"Notice\": \"Failed\" }", HttpStatus.BAD_REQUEST);
-                } else {
-                    entity = new ResponseEntity<>(tmpUserInfo, HttpStatus.OK);
-                }
+                    if(tmpUserInfo == null) {
+                        entity = new ResponseEntity<>("{ \"Notice\": \"Failed\" }", HttpStatus.BAD_REQUEST);
+                    } else {
+                        entity = new ResponseEntity<>(tmpUserInfo, HttpStatus.OK);
+                    }
+    
+                
             }
         } else {
             entity = new ResponseEntity<>("{ \"Notice\": \"Unauthorized\" }", HttpStatus.UNAUTHORIZED);

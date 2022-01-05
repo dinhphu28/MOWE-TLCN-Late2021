@@ -33,7 +33,7 @@ public class SendMailUtil {
 
         helper.setTo(receiver);
 
-        helper.setSubject("Zound - NDP System");
+        helper.setSubject("Zound - Email verification");
 
         emailSender.send(message);
 

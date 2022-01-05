@@ -98,7 +98,7 @@ function EditArticlePopup(props) {
     };
 
     const changeInputValueTitle = (e) => {
-        setTitle(e.target.value);
+        setTitle(e.target.value.trim());
     };
     const changeInputValueDescription = (e) => {
         setDescription(e.target.value);

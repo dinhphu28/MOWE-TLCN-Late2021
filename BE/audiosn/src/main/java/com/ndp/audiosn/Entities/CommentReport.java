@@ -16,22 +16,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "tbl_comment")
+@Table(name = "tbl_comment_report")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment {
+public class CommentReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "col_id")
     private Integer id;
 
+    @Column(name = "col_comment_id")
+    private Integer commentId;
+
     @Column(name = "col_author")
     private String author;
-
-    @Column(name = "col_article_id")
-    private Integer articleId;
 
     @Column(name = "col_date")
     private LocalDate date;
@@ -42,9 +42,6 @@ public class Comment {
     @Column(name = "col_content")
     private String content;
 
-    @Column(name = "col_audio_content")
-    private String audioContent;
-
-    @Column(name = "col_hidden")
-    private Boolean hidden;
+    @Column(name = "col_solved")
+    private Boolean solved;
 }

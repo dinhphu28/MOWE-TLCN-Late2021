@@ -18,8 +18,8 @@ public class UserInfoUpdateModel {
 
     private String email;
 
-    public UserInfo toUserInfoEntity(String username) {
+    public UserInfo toUserInfoEntity(String username, Boolean emailVerified) {
         // return new UserInfo(username, avatar, email);
-        return new UserInfo(username, displayName, avatar, email, false);
+        return new UserInfo(username, displayName, avatar, email, emailVerified);
     }
 }

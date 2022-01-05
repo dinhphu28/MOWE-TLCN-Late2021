@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, CardBody, CardLink, CardSubtitle, CardText, CardTitle, ButtonGroup } from 'reactstrap';
-// import PropTypes from 'prop-types';
-import "./ReportMan.css";
-import reportsApi from '../../api/reportsApi';
-import LIArticleReportPopup from './ListArticleReportsPopup/index';
 import { Link } from 'react-router-dom';
+import { Button, ButtonGroup, Card, CardBody, CardLink, CardSubtitle, CardText, CardTitle } from 'reactstrap';
+// import PropTypes from 'prop-types';
+import commentReportApi from '../../api/commentReportApi';
+import LICommentReportPopup from './ListCommentReportsPopup/LICommentReportPopup';
 
-// ReportMan.propTypes = {};
+// CommentReportMan.propTypes = {};
 
-function ReportMan(props) {
+function CommentReportMan(props) {
 
+    const [popupOpen, setPopupOpen] = useState(false);
+    const [solved, setSolved] = useState(false);
     const [listReport, setListReport] = useState([]);
     const [loaded, setLoaded] = useState(false);
-    const [popupOpen, setPopupOpen] = useState(false);
     const [popupData, setPopupData] = useState({});
-    const [solved, setSolved] = useState(false);
 
     useEffect(() => {
         const fetchListReports = async () => {
@@ -23,36 +22,21 @@ function ReportMan(props) {
                     solved: solved
                 };
 
-                const response = await reportsApi.getAll(params);
+                const response = await commentReportApi.getAll(params);
 
-                // console.log("Fetch list reports successfully: ", response);
+                console.log("Fetch comment reports list successfully: ", response);
 
                 setListReport(response);
-
+                
                 setLoaded(true);
 
-            } catch (error) {
-                console.log("Failed to fetch list reports: ", error);
+            } catch(error) {
+                console.log("Failed to fetch list comment reports: ", error);
             }
         }
 
         fetchListReports();
     }, [solved]);
-
-    const fetchSolvedOrUnsolved = async (id, newSolvedState) => {
-        try {
-            const data = {
-                solved: newSolvedState
-            };
-
-            await reportsApi.putSolvedUnsolved(id, data);
-
-            // console.log("Fetch update solved state successfully: ", response);
-
-        } catch (error) {
-            console.log("Failed to fetch solved-unsolved: ", error);
-        }
-    }
 
     const loadListReportCards = () => {
         if(loaded) {
@@ -75,6 +59,27 @@ function ReportMan(props) {
                             Date: {item.date} Time: {item.time}
                         </small>
                     </CardText>
+                    <CardSubtitle
+                        className="mb-2 text-muted"
+                        tag="h6"
+                    >
+                        Comment's author: {item.commentAuthor}
+                    </CardSubtitle>
+                    <CardText>
+                        <small className='text-muted'>
+                            <b>Comment's content:</b>{" "}
+                            <em>
+                                {item.commentContent}
+                            </em>
+                        </small>
+                    </CardText>
+                    <hr />
+                    <CardSubtitle
+                        className="mb-2 text-muted"
+                        tag="h6"
+                    >
+                        Report's content:
+                    </CardSubtitle>
                     <CardText>
                         {item.content}
                     </CardText>
@@ -90,14 +95,16 @@ function ReportMan(props) {
                         href='#'
                         onClick={() => {
                             const pData = {
-                                articleId: item.articleId,
-                                articleTitle: item.articleTitle
+                                commentId: item.commentId,
+                                articleTitle: item.articleTitle,
+                                commentContent: item.commentContent,
+                                commentAuthor: item.commentAuthor
                             };
                             setPopupData(pData);
                             setPopupOpen(true);
                         }}
                     >
-                        Show all reports of this article
+                        Show all reports of this comment
                     </CardLink>
                     <CardLink href={"/articles/" + item.articleUrl}>
                         Go to article
@@ -107,7 +114,7 @@ function ReportMan(props) {
                             color="primary"
                             className="float-end"
                             onClick={() => {
-                                fetchSolvedOrUnsolved(item.id, false);
+                                // fetchSolvedOrUnsolved(item.id, false);
                             }}
                         >
                             Mark as unsolved
@@ -116,7 +123,7 @@ function ReportMan(props) {
                             color="primary"
                             className="float-end"
                             onClick={() => {
-                                fetchSolvedOrUnsolved(item.id, true);
+                                // fetchSolvedOrUnsolved(item.id, true);
                             }}
                         >
                             Mark as solved
@@ -137,10 +144,10 @@ function ReportMan(props) {
 
     return (
         <div>
-            <Link to="/comment-reports"
+            <Link to="/reports"
                 style={{marginLeft: "2rem"}}
             >
-                Comment reports
+                Article reports
             </Link>
             <div className='btn-sw-report-separate'>
                 <ButtonGroup className='float-end'>
@@ -166,19 +173,21 @@ function ReportMan(props) {
             <h4
                 style={{textAlign: "center"}}
             >
-                Article reports
+                Comment reports
             </h4>
             <div className="my-reports-list">
                 {loadListReportCards()}
 
-                {popupOpen ? <LIArticleReportPopup
+                {popupOpen ? <LICommentReportPopup
                     onHandleChange={receiveCancel}
-                    articleId={popupData.articleId}
+                    commentId={popupData.commentId}
                     articleTitle={popupData.articleTitle}
+                    commentContent={popupData.commentContent}
+                    commentAuthor={popupData.commentAuthor}
                 />: ""}
             </div>
         </div>
     );
 }
 
-export default ReportMan;
+export default CommentReportMan;

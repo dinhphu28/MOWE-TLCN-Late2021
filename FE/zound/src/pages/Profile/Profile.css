@@ -19,3 +19,15 @@
 .my-form {
     margin-top: 2.5rem;
 }
+
+.my-form #verified-label {
+    color: #198754;
+}
+
+.my-form #unverified-label {
+    color: #ffc107;
+}
+
+.my-form .btn-verify-email{
+    margin-left: 1rem;
+}

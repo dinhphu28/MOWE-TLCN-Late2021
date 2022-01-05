@@ -28,7 +28,7 @@ public class CommentUpdateModel {
     public Comment toComment(Integer articleId, Integer id, LocalDate date, LocalTime time) {
         // Comment comment = new Comment(id, author, articleId, date, time, content);
 
-        Comment comment = new Comment(0, author, articleId, date, time, content, audioContent);
+        Comment comment = new Comment(0, author, articleId, date, time, content, audioContent, false);
 
         return comment;
     }

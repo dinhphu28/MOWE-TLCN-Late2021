@@ -33,6 +33,7 @@ function ArticleContent(props) {
     const [editPopupOpen, setEditPopupOpen] = useState(false);
     const [reportPopupOpen, setReportPopupOpen] = useState(false);
     const [hideState, setHideState] = useState(false);
+
     // const [refresh, setRefresh] = useState(false);
 
     let navigate = useNavigate();
@@ -252,7 +253,7 @@ function ArticleContent(props) {
                 <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />
             </div>
             <hr />
-            {(localStorage.getItem("username") !== null) ? <Button
+            {(localStorage.getItem("role") === "norm") ? <Button
                 color="info"
                 onClick={() => {
                     setReportPopupOpen(true);

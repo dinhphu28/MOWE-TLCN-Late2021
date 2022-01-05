@@ -5,6 +5,7 @@ import { BASE_URL_API_BE } from '../../constants/global';
 import UploadFiles from '../../features/FileUploadCard';
 // import PropTypes from 'prop-types';
 import "./Profile.css";
+import emailVerificationApi from '../../api/emailVerificationApi';
 
 // Profile.propTypes = {};
 
@@ -12,6 +13,8 @@ function Profile(props) {
 
     const [avatar, setAvatar] = useState("");
     const [email, setEmail] = useState("");
+    const [emailVerified, setEmailVerified] = useState(false);
+    const [oldEmail, setOldEmail] = useState("");
     
     // const [profileInfo, setProfileInfo] = useState({});
 
@@ -76,6 +79,8 @@ function Profile(props) {
 
                 setAvatar(response.avatar);
                 setEmail(response.email);
+                setOldEmail(response.email);
+                setEmailVerified(response.emailVerified);
 
                 // console.log("Fetch profile successfully: ", response);
                 
@@ -106,6 +111,24 @@ function Profile(props) {
 
     const receiveImageUrl = (imgFileName) => {
         setAvatar(imgFileName);
+    }
+
+    const fetchRequestEmailVerification = async () => {
+        try {
+            const data = {
+                username: localStorage.getItem("username")
+            };
+
+            alert("Please check your mail inbox.");
+
+            const response = await emailVerificationApi.post(data);
+
+            console.log("Fetch REV successfully: ", response);
+
+        } catch(error) {
+            console.log("Failed to fetch REV: ", error);
+            alert("Please save your email and click verify again!");
+        }
     }
 
     return (
@@ -140,8 +163,28 @@ function Profile(props) {
                 </FormGroup>
                 <FormGroup>
                     <Label>
-                        Email:
+                        Email: {oldEmail}
+                        {emailVerified ?
+                            <h4 id="verified-label">
+                                Verified
+                            </h4> :
+                            <h4 id="unverified-label">
+                                Unverified
+                            </h4>
+                        }
                     </Label>
+                    {!emailVerified ?
+                        <Button
+                            type="button"
+                            color="primary"
+                            className="btn-verify-email"
+                            onClick={() => {
+                                fetchRequestEmailVerification();
+                            }}
+                        >
+                            Verify email
+                        </Button>
+                    : ""}
                     <Input 
                         type="email"
                         name="email"

@@ -1,21 +1,26 @@
 package com.ndp.audiosn.Controllers;
 
 import com.ndp.audiosn.Entities.User;
+import com.ndp.audiosn.Entities.UserInfo;
 import com.ndp.audiosn.Entities.UserRole;
 import com.ndp.audiosn.Models.Auth.CredentialReturn;
+import com.ndp.audiosn.Models.Auth.ForgetPasswordUpdateModel;
 import com.ndp.audiosn.Models.Auth.PasswordChangeModel;
 import com.ndp.audiosn.Models.Auth.UserModel;
+import com.ndp.audiosn.Services.UserInfoService;
 import com.ndp.audiosn.Services.UserRoleService;
 import com.ndp.audiosn.Services.UserService;
 import com.ndp.audiosn.Utils.Auth.PasswordAuthUtil;
 import com.ndp.audiosn.Utils.Auth.JWT.jwtSecurity;
 import com.ndp.audiosn.Utils.Auth.JWT.myJWT;
+import com.ndp.audiosn.Utils.Mail.SendMailUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +38,12 @@ public class AuthREST {
 
     @Autowired
     private UserRoleService userRoleService;
+
+    @Autowired
+    private UserInfoService userInfoService;
+
+    @Autowired
+    private SendMailUtil sendMailUtil;
 
     // Login
     @PutMapping(
@@ -127,6 +138,86 @@ public class AuthREST {
             }
         }
         
+        return entity;
+    }
+
+    // Forget password
+    @PatchMapping(
+        value = "/forget-password/{username}",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> forgetPassword(@PathVariable("username") String username, @RequestBody ForgetPasswordUpdateModel forgetPasswordUpdateModel) {
+        ResponseEntity<Object> entity;
+
+        myJWT jwt = new jwtSecurity();
+
+        User tmpUserCk = userService.retrieveOne(username);
+
+        if(tmpUserCk == null) {
+            entity = new ResponseEntity<>("{ \"Notice\": \"User not found\" }", HttpStatus.NOT_FOUND);
+        } else {
+
+            if(!jwt.VerifyToken(forgetPasswordUpdateModel.getToken(), username)) {
+                entity = new ResponseEntity<>("{ \"Notice\": \"Token is not verified!\" }", HttpStatus.CONFLICT);
+            } else {
+
+                PasswordAuthUtil passwordAuthUtil = new PasswordAuthUtil();
+
+                String newPasswordEncrypted = passwordAuthUtil.storePassword(forgetPasswordUpdateModel.getPassword());
+
+                User tmpToUpdate = tmpUserCk;
+
+                tmpToUpdate.setPassword(newPasswordEncrypted);
+
+                User tmpSaved = userService.updateOne(tmpToUpdate);
+
+                if(tmpSaved == null) {
+                    entity = new ResponseEntity<>("{ \"Notice\": \"Can't change password!\" }", HttpStatus.INTERNAL_SERVER_ERROR);
+                } else {
+                    entity = new ResponseEntity<>("{ \"Notice\": \"Password changed!\" }", HttpStatus.OK);
+                }
+            }
+        }
+
+        return entity;
+    }
+
+    @GetMapping(
+        value = "/forget-password/{username}",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> getTokenForgetPassword(@PathVariable("username") String username) {
+        ResponseEntity<Object> entity;
+
+        myJWT jwt = new jwtSecurity();
+
+        UserInfo userInfo = userInfoService.retrieveOne(username);
+
+        if(userInfo == null) {
+            entity = new ResponseEntity<>("{ \"Notice\": \"Email of user does not exist or can't receive inbox!\" }", HttpStatus.BAD_REQUEST);
+        } else {
+            String token = jwt.GenerateForgetPasswordToken(username);
+
+            if(token.equals("")) {
+                entity = new ResponseEntity<>("{ \"Notice\": \"Failed to generate token\" }", HttpStatus.INTERNAL_SERVER_ERROR);
+            } else {
+                try {
+                    String htmlMsgContent = "<h3>Reset your password</h3>" +
+                        "<p>Your token here:</p>" +
+                        "<h5>" + token + "</h5>" +
+                        "<p>This token will expired after 5 minutes</p>";
+    
+                    sendMailUtil.sendHtmlEmail(htmlMsgContent, userInfo.getEmail());
+    
+                    entity = new ResponseEntity<>("{ \"Notice\": \"Check your email!\" }", HttpStatus.OK);
+                } catch (Exception e) {
+                    //TODO: handle exception
+                    entity = new ResponseEntity<>("{ \"Notice\": \"Email of user does not exist or can't receive inbox!\" }", HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+
         return entity;
     }
 

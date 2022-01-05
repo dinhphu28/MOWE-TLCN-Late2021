@@ -29,7 +29,7 @@ public class CommentCreateModel {
     public Comment toComment(Integer articleId, LocalDate date, LocalTime time) {
         // Comment comment = new Comment(0, author, articleId, date, time, content);
 
-        Comment comment = new Comment(0, author, articleId, date, time, content, audioContent);
+        Comment comment = new Comment(0, author, articleId, date, time, content, audioContent, false);
 
         return comment;
     }

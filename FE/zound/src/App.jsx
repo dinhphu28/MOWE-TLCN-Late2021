@@ -16,6 +16,8 @@ import Profile from './pages/Profile/index';
 import ChangePassword from './pages/ChangePassword/index';
 import AdminMan from './pages/AdminManagement/AdminMan';
 import ReportMan from './pages/ReportManagement';
+import ForgetPassword from './pages/ForgetPassword';
+import CommentReportMan from './pages/CommentReportMan';
 
 function App() {
 
@@ -57,9 +59,13 @@ function App() {
             
             <Route path="/profile" element={<Profile />} />
 
-            <Route path="/admin" element={<AdminMan />} />
+            <Route path="/user-management" element={<AdminMan />} />
 
             <Route path="/reports" element={<ReportMan />} />
+
+            <Route path="/comment-reports" element={<CommentReportMan />} />
+
+            <Route path="/forget-password" element={<ForgetPassword />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -23,6 +23,10 @@ public class CommentService {
         return repo.findByArticleId(articleId);
     }
 
+    public List<Comment> retrieveAllByArticleIdAndHidden(Integer articleId, Boolean hidden) {
+        return repo.findByArticleIdAndHidden(articleId, hidden);
+    }
+
     public Comment retrieveOne(Integer id) {
         Comment sth = null;
 

@@ -29,7 +29,8 @@ public class SendMailUtil {
             htmlMsg = htmlMsgContent;
         }
 
-        message.setContent(htmlMsg, "text/html");
+        // message.setContent(htmlMsg, "text/html");
+        message.setContent(htmlMsg, "text/html; charset=UTF-8");
 
         helper.setTo(receiver);
 
